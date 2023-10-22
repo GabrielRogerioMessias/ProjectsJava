@@ -29,5 +29,8 @@ public class UserService implements Serializable {
         return userRepository.findAll();
     }
 
+    public UserDetails findByLogin(String login) {
+        return userRepository.findByLogin(login);
+    }
 
 }
