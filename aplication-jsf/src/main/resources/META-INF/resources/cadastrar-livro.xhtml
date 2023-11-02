@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html lang="en-us"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<h:head>
+    <title>Projeto</title>
+</h:head>
+
+<h:body>
+    <h:form>
+        <ui:include src="menu.xhtml"></ui:include>
+        <p:messages id="mensagem"/>
+        <p:panel header="Cadastro de livros" id="tela">
+            <h:panelGrid columns="2">
+                <p:outputLabel value="Digite o titulo do livro"/>
+                <p:inputText value="#{bookController.book.title}"/>
+                <p:outputLabel value="Escolha a data de publicção"/>
+                <p:calendar value="#{bookController.book.yearPublication}" pattern="dd/MM/yyyy"/>
+                <p:outputLabel value="Selecione o autor"/>
+                <p:selectOneMenu value="#{bookController.idAutor}">
+                    <f:selectItems value="#{autorController.autorList}" var="autor" itemValue="#{autor.id}"
+                                   itemLabel="#{autor.name}"/>
+                </p:selectOneMenu>
+                <h:outputLabel value="Selecione a editora"/>
+                <p:selectOneMenu value="#{bookController.idEditora}">
+                    <f:selectItems value="#{editoraController.editoraList}" var="editora" itemValue="#{editora.id}"
+                                   itemLabel="#{editora.nameFantasy}"/>
+                </p:selectOneMenu>
+            </h:panelGrid>
+            <p:panelGrid columns="2">
+                <p:commandButton value="Cadastrar" actionListener="#{bookController.insert()}" update="tela,mensagem"/>
+
+            </p:panelGrid>
+        </p:panel>
+
+
+    </h:form>
+</h:body>
+
+</html>

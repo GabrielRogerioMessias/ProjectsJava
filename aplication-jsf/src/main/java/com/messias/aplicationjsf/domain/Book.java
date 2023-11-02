@@ -3,6 +3,7 @@ package com.messias.aplicationjsf.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,7 +13,7 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String title;
-    private LocalDateTime yearPublication;
+    private LocalDate yearPublication;
 
     @ManyToOne
     @JoinColumn(name = "idAutor")

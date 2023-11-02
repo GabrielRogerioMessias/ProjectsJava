@@ -25,6 +25,16 @@ public class BookService {
         bookRepository.save(book);
     }
 
+    public void updateData(Book oldBoook, Book newBook) {
+        oldBoook.setTitle(newBook.getTitle());
+        oldBoook.setYearPublication(newBook.getYearPublication());
+    }
+
+    public void update(Integer idOldBook, Book newBook) {
+        Book oldBook = bookRepository.findById(idOldBook).get();
+        this.updateData(oldBook, newBook);
+        bookRepository.save(oldBook);
+    }
 
 
 }
