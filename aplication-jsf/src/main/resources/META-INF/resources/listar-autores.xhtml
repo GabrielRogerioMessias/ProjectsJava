@@ -16,14 +16,14 @@
 <h:body>
     <ui:include src="menu.xhtml"></ui:include>
     <p:panel header="Lista de Autores">
-        <p:panelGrid columns="2">
+        <h:panelGrid columns="2">
             <p:dataTable value="#{autorController.autorList}" var="listaAutor">
                 <p:column headerText="Nome Autor">
                     #{listaAutor.name}
                 </p:column>
 
             </p:dataTable>
-        </p:panelGrid>
+        </h:panelGrid>
     </p:panel>
 </h:body>
 

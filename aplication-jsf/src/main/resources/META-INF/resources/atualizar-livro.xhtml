@@ -20,23 +20,23 @@
         <p:panel header="Cadastro de livros" id="tela">
             <h:panelGrid columns="2">
                 <p:outputLabel value="Digite o titulo do livro"/>
-                <p:inputText value="#{bookInsertController.book.title}"/>
+                <p:inputText value="#{bookController.book.title}"/>
                 <p:outputLabel value="Escolha a data de publicção"/>
-                <p:calendar value="#{bookInsertController.book.yearPublication}" pattern="dd/MM/yyyy"/>
+                <p:calendar value="#{bookController.book.yearPublication}" pattern="dd/MM/yyyy"/>
                 <p:outputLabel value="Selecione o autor"/>
-                <p:selectOneMenu value="#{bookInsertController.idAutor}">
+                <p:selectOneMenu value="#{bookController.idAutor}">
                     <f:selectItems value="#{autorController.autorList}" var="autor" itemValue="#{autor.id}"
                                    itemLabel="#{autor.name}"/>
                 </p:selectOneMenu>
                 <h:outputLabel value="Selecione a editora"/>
-                <p:selectOneMenu value="#{bookInsertController.idEditora}">
+                <p:selectOneMenu value="#{bookController.idEditora}">
                     <f:selectItems value="#{editoraController.editoraList}" var="editora" itemValue="#{editora.id}"
                                    itemLabel="#{editora.nameFantasy}"/>
                 </p:selectOneMenu>
             </h:panelGrid>
-            <p:panelGrid columns="2">
-                <p:commandButton value="Cadastrar" actionListener="#{bookInsertController.insert()}" update="tela,mensagem"/>
-
+            <p:panelGrid columns="1">
+                <p:commandButton value="Atualizar" actionListener="#{bookController.insert()}" update="tela,mensagem"/>
+                <p:button value="Voltar" outcome="listar-livros.xhtml"/>
             </p:panelGrid>
         </p:panel>
 

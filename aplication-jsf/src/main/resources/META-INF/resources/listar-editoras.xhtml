@@ -16,14 +16,14 @@
 <h:body>
     <ui:include src="menu.xhtml"></ui:include>
     <p:panel header="Lista de Editoras">
-        <p:panelGrid columns="2">
+        <h:panelGrid columns="2">
             <p:dataTable value="#{editoraController.editoraList}" var="listEditora">
                 <p:column headerText="Nome Editora">
                     #{listEditora.nameFantasy}
                 </p:column>
 
             </p:dataTable>
-        </p:panelGrid>
+        </h:panelGrid>
     </p:panel>
 </h:body>
 

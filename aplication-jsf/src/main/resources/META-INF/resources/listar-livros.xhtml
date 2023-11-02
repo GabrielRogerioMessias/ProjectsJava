@@ -35,6 +35,11 @@
                         <p:commandButton value="Excluir" actionListener="#{bookController.excluir(linhas)}"
                                          oncomplete="location.reload();"/>
                     </p:column>
+
+                    <p:column>
+                        <p:commandButton value="Atualizar" actionListener="#{bookController.update(linhas)}"/>
+                    </p:column>
+
                 </p:dataTable>
             </h:panelGrid>
         </p:panel>

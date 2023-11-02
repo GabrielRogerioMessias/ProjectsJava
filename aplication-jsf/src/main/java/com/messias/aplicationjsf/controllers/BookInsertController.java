@@ -17,17 +17,16 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@ViewScoped
 @Data
-public class BookController {
+@ViewScoped
+public class BookInsertController {
     @Autowired
     private BookService bookService;
-
     @Autowired
     private AutorRepository autorRepository;
-
     @Autowired
     private EditoraRepository editoraRepository;
+
     private List<Book> bookList;
     private Book book;
     private Integer idAutor;
@@ -36,8 +35,6 @@ public class BookController {
     @PostConstruct
     public void novo() {
         book = new Book();
-        book = Faces.getFlashAttribute("selecionado");
-
     }
 
     @PostConstruct
@@ -45,9 +42,6 @@ public class BookController {
         return bookList = bookService.findALl();
     }
 
-    public void excluir(Book book) {
-        bookService.delete(book);
-    }
 
     public void insert() {
         Book newBook = book;
@@ -62,11 +56,5 @@ public class BookController {
         book = new Book();
     }
 
-    public void update(Book book) {
-        Faces.setFlashAttribute("selecionado", book);
-        Faces.redirect("atualizar-livro.xhtml");
-        Integer idBookOld = book.getId();
-        bookService.update(idBookOld,book);
-    }
 
 }
