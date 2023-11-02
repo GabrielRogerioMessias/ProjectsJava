@@ -16,8 +16,7 @@ public class BookService {
         return bookRepository.findAll();
     }
 
-    public void delete(Integer idBook) {
-        Book book = bookRepository.findById(idBook).get();
+    public void delete(Book book) {
         bookRepository.delete(book);
     }
 

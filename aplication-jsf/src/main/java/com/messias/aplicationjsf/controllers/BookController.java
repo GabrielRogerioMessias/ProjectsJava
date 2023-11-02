@@ -42,6 +42,10 @@ public class BookController {
         return bookList = bookService.findALl();
     }
 
+    public void excluir(Book book) {
+        bookService.delete(book);
+    }
+
     public void insert() {
         Book newBook = book;
         Autor autor = autorRepository.findById(idAutor).get();
@@ -55,5 +59,6 @@ public class BookController {
         book = new Book();
     }
 
+    public void update(){}
 
 }

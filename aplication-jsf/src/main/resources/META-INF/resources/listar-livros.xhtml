@@ -14,8 +14,31 @@
 </h:head>
 
 <h:body>
-    <h:form>
-        <p:textEditor secure="false" />
+    <h:form id="oi">
+        <ui:include src="menu.xhtml"></ui:include>
+        <p:panel header="Listar Livros">
+            <h:panelGrid columns="2">
+                <p:dataTable value="#{bookController.bookList}" var="linhas">
+                    <p:column headerText="Titulo do livro">
+                        #{linhas.title}
+                    </p:column>
+                    <p:column headerText="Ano de publicação">
+                        #{linhas.yearPublication}
+                    </p:column>
+                    <p:column headerText="Editora">
+                        #{linhas.editora.nameFantasy}
+                    </p:column>
+                    <p:column headerText="Autor">
+                        #{linhas.autor.name}
+                    </p:column>
+                    <p:column headerText="Opções">
+                        <p:commandButton value="Excluir" actionListener="#{bookController.excluir(linhas)}"
+                                         oncomplete="location.reload();"/>
+                    </p:column>
+                </p:dataTable>
+            </h:panelGrid>
+        </p:panel>
+
     </h:form>
 </h:body>
 
