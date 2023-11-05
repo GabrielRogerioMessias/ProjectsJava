@@ -58,7 +58,7 @@ public class BookController {
         newBook.setEditora(editora);
         newBook.setAutor(autor);
         bookService.insert(newBook);
-        Messages.addFlashGlobalInfo("Produto cadastrado com sucesso!");
+        Messages.addFlashGlobalInfo("Produto atualizado com sucesso!");
         book = new Book();
     }
 
