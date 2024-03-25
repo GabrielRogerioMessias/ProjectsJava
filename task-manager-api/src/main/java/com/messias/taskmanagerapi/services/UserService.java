@@ -5,6 +5,7 @@ import com.messias.taskmanagerapi.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -15,8 +16,8 @@ public class UserService {
     }
 
     public User insertNewUser(User newUser) {
-        User userValidate = userRepository.findByUsername(newUser.getUsername()).get();
-        if (userValidate != null) {
+        Optional<User> userValidate = userRepository.findByUsername(newUser.getUsername());
+        if (userValidate.isPresent()) {
             //exception
         }
             return userRepository.save(newUser);
