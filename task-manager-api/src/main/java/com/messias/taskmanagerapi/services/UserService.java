@@ -14,7 +14,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public List<User> findAllUsers(){
+    public User insertNewUser(User newUser) {
+        User userValidate = userRepository.findByUsername(newUser.getUsername()).get();
+        if (userValidate != null) {
+            //exception
+        }
+            return userRepository.save(newUser);
+    }
+
+    public List<User> findAllUsers() {
         return userRepository.findAll();
     }
+
+
 }

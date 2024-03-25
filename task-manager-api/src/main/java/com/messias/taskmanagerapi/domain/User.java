@@ -2,8 +2,10 @@ package com.messias.taskmanagerapi.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.UUID;
+
 @Entity
 @Data
 @Getter
@@ -17,5 +19,7 @@ public class User {
     private UUID id;
     private String name;
     private String surname;
+    @Column(unique = true)
+    private String username;
     private Integer age;
 }
