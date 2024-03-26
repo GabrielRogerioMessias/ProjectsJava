@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -22,5 +23,10 @@ public class UserController {
         userService.insertNewUser(newUser);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(newUser.getId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+    @GetMapping
+    public ResponseEntity<List<User>> listAllUsers(){
+       List<User> allUsers =  userService.findAllUsers();
+       return ResponseEntity.ok().body(allUsers);
     }
 }
