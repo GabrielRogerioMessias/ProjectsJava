@@ -8,7 +8,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StandartError {
+public class StandardError {
     private Instant timestamp;
     private Integer status;
     private String error;
