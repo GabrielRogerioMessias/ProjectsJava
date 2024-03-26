@@ -2,6 +2,8 @@ package com.messias.taskmanagerapi.services;
 
 import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.repositories.UserRepository;
+import com.messias.taskmanagerapi.services.exceptions.UserAlreadyRegistered;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,11 +18,11 @@ public class UserService {
     }
 
     public User insertNewUser(User newUser) {
-        Optional<User> userValidate = userRepository.findByUsername(newUser.getUsername());
-        if (userValidate.isPresent()) {
-            //exception
-        }
+        try{
             return userRepository.save(newUser);
+        }catch (DataIntegrityViolationException e){
+            throw new UserAlreadyRegistered("User already registered with username: " + newUser.getUsername());
+        }
     }
 
     public List<User> findAllUsers() {
