@@ -17,15 +17,17 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    public User findUserById(UUID idUser){
+
+
+    public User findUserById(UUID idUser) {
         User userToDelete = userRepository.findById(idUser).orElseThrow();
         return userToDelete;
     }
 
     public User insertNewUser(User newUser) {
-        try{
+        try {
             return userRepository.save(newUser);
-        }catch (DataIntegrityViolationException e){
+        } catch (DataIntegrityViolationException e) {
             throw new UserAlreadyRegistered("User already registered with username: " + newUser.getUsername());
         }
     }
@@ -33,7 +35,6 @@ public class UserService {
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
-
 
 
 }
