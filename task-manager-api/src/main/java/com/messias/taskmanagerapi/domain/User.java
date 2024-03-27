@@ -2,6 +2,11 @@ package com.messias.taskmanagerapi.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Entity
@@ -20,5 +25,7 @@ public class User {
     @Column(unique = true)
     private String username;
     private String password;
-    private Integer age;
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
+    private LocalDate birthDate;
+
 }

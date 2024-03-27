@@ -19,6 +19,12 @@ public class UserController {
         this.userService = userService;
     }
 
+    @DeleteMapping("{idUser}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable UUID idUser) {
+       userService.deleteUser(idUser);
+       return ResponseEntity.noContent().build();
+    }
+
     @GetMapping("{idUser}")
     public ResponseEntity<User> findUserById(@PathVariable UUID idUser) {
     User userResult = userService.findUserById(idUser);
