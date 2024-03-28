@@ -1,6 +1,7 @@
 package com.messias.taskmanagerapi.controllers;
 
 import com.messias.taskmanagerapi.domain.User;
+import com.messias.taskmanagerapi.domain.dtos.UserDTO;
 import com.messias.taskmanagerapi.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,8 +40,8 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> listAllUsers() {
-        List<User> allUsers = userService.findAllUsers();
+    public ResponseEntity<List<UserDTO>> listAllUsers() {
+        List<UserDTO> allUsers = userService.findAllUsers();
         return ResponseEntity.ok().body(allUsers);
     }
 }

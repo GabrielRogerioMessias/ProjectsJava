@@ -1,6 +1,7 @@
 package com.messias.taskmanagerapi.services;
 
 import com.messias.taskmanagerapi.domain.User;
+import com.messias.taskmanagerapi.domain.dtos.UserDTO;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.services.exceptions.UserAlreadyRegistered;
@@ -8,10 +9,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class UserService {
@@ -48,8 +46,15 @@ public class UserService {
         }
     }
 
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> findAllUsers() {
+        List<User> allUsers = userRepository.findAll();
+        List<UserDTO> allUsersDTO = allUsers.stream().map(
+                user -> {
+                    UserDTO userDTO = new UserDTO(user.getId(), user.getName(), user.getSurname(), user.getBirthDate());
+                    return userDTO;
+                }
+        ).toList();
+        return allUsersDTO;
     }
 
 
