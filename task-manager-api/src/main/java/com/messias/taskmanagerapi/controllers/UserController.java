@@ -22,14 +22,14 @@ public class UserController {
 
     @DeleteMapping("{idUser}")
     public ResponseEntity<Void> deleteUserById(@PathVariable UUID idUser) {
-       userService.deleteUser(idUser);
-       return ResponseEntity.noContent().build();
+        userService.deleteUser(idUser);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("{idUser}")
     public ResponseEntity<User> findUserById(@PathVariable UUID idUser) {
-    User userResult = userService.findUserById(idUser);
-    return ResponseEntity.ok().body(userResult);
+        User userResult = userService.findUserById(idUser);
+        return ResponseEntity.ok().body(userResult);
     }
 
     @PostMapping
@@ -43,5 +43,11 @@ public class UserController {
     public ResponseEntity<List<UserDTO>> listAllUsers() {
         List<UserDTO> allUsers = userService.findAllUsers();
         return ResponseEntity.ok().body(allUsers);
+    }
+
+    @PutMapping(value = "/{idOldUser}")
+    public ResponseEntity<UserDTO> updateUser(@PathVariable UUID idOldUser, @RequestBody UserDTO updateUser) {
+        UserDTO userDTOUpdate = userService.updateUser(idOldUser, updateUser);
+        return ResponseEntity.ok().body(userDTOUpdate);
     }
 }

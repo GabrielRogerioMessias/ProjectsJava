@@ -57,5 +57,20 @@ public class UserService {
         return allUsersDTO;
     }
 
+    public UserDTO updateUser(UUID idOldUser, UserDTO updateUser) {
+        User oldUser = userRepository.findById(idOldUser).orElseThrow(() -> new ResourceNotFoundException(User.class, idOldUser));
+        updateData(oldUser, updateUser);
+        userRepository.save(oldUser);
+        return convertDate(oldUser);
+    }
 
+    void updateData(User oldUser, UserDTO updateUser) {
+        oldUser.setName(updateUser.getName());
+        oldUser.setSurname(updateUser.getSurname());
+        oldUser.setBirthDate(updateUser.getBirthDate());
+    }
+
+    public UserDTO convertDate(User user) {
+        return new UserDTO(user.getId(), user.getName(), user.getSurname(), user.getBirthDate());
+    }
 }
