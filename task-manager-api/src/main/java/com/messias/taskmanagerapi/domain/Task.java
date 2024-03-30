@@ -1,28 +1,35 @@
 package com.messias.taskmanagerapi.domain;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
+@Data
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tb_task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String description;
     private LocalDateTime initialDateAndHours;
     private LocalDateTime finalDateAndHours;
     private LocalDateTime elapsedTime;
-    private  Long elapsedDays;
+    private Long elapsedDays;
     private Long elapsedMinutes;
     private Long elapsedSeconds;
+    @ManyToOne
+    @JoinColumn(name = "id_category")
+    private Category category;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
 
 
 }

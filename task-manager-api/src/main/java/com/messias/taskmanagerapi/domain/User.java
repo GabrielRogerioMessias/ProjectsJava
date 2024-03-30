@@ -5,6 +5,7 @@ import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -25,5 +26,7 @@ public class User {
     private String password;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
+@OneToMany(mappedBy = "user")
+    private List<Task> taskList;
 
 }
