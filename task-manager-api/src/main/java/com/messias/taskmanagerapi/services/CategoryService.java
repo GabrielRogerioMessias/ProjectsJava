@@ -4,6 +4,7 @@ import com.messias.taskmanagerapi.domain.Category;
 import com.messias.taskmanagerapi.repositories.CategoryRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceAlreadyRegisteredException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,17 @@ public class CategoryService {
             return categoryRepository.save(newCategory);
         } catch (DataIntegrityViolationException exception) {
             throw new ResourceAlreadyRegisteredException(Category.class, newCategory.getDescription());
+        }
+    }
+
+    public void delete(Integer idCategory) {
+        try {
+            Category category = categoryRepository.findById(idCategory).get();
+            categoryRepository.delete(category);
+        } catch (NoSuchElementException exception) {
+            throw new ResourceNotFoundException(Category.class, idCategory);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
         }
     }
 
