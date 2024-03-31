@@ -17,6 +17,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+    @Column(unique = true)
     private String description;
     @OneToMany(mappedBy = "category")
     private List<Task> tasksLis;
