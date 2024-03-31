@@ -10,4 +10,7 @@ public class ResourceNotFoundException extends RuntimeException{
     public ResourceNotFoundException(Class<?> nameClass, UUID idEntity){
         super(nameClass.getSimpleName() + " not found with UUID: " + idEntity);
     }
+    public ResourceNotFoundException(Class<?> nameClass, Integer idEntity){
+        super(nameClass.getSimpleName() + " not found with UUID: " + idEntity);
+    }
 }
