@@ -26,7 +26,8 @@ public class User {
     private String password;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
-@OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user")
     private List<Task> taskList;
-
+    @OneToMany(mappedBy = "user")
+    private List<Category> categoryList;
 }

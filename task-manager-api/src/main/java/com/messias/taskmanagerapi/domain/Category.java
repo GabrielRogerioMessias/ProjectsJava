@@ -20,5 +20,8 @@ public class Category {
     private String description;
     @OneToMany(mappedBy = "category")
     private List<Task> tasksLis;
+    @ManyToOne
+    @JoinColumn(name = "id_user")
+    private User user;
 
 }
