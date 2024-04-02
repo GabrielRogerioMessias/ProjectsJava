@@ -18,4 +18,5 @@ public class TaskService {
     public List<Task> findAllTaks(UUID idUser) {
         return taskRepository.allTaksByIdUser(idUser);
     }
+
 }

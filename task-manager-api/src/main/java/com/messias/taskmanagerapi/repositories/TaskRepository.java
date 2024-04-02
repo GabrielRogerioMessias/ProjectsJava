@@ -1,7 +1,6 @@
 package com.messias.taskmanagerapi.repositories;
 
 import com.messias.taskmanagerapi.domain.Task;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

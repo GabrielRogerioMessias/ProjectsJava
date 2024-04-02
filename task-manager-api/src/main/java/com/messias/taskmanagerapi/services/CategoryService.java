@@ -1,6 +1,7 @@
 package com.messias.taskmanagerapi.services;
 
 import com.messias.taskmanagerapi.domain.Category;
+import com.messias.taskmanagerapi.domain.dtos.CategoryDTO;
 import com.messias.taskmanagerapi.repositories.CategoryRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceAlreadyRegisteredException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
@@ -10,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,8 +21,15 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<Category> findAllCategoriesByIdUser(UUID idUser) {
-        return categoryRepository.findAllCategoryByIdUser(idUser);
+    public List<CategoryDTO> findAllCategoriesByIdUser(UUID idUser) {
+        List<Category> categoryList = categoryRepository.findAllCategoryByIdUser(idUser);
+        List<CategoryDTO> categoryDTOList = categoryList.stream().map(
+                category -> {
+                    CategoryDTO categoryDTO = new CategoryDTO(category.getDescription());
+                   return categoryDTO;
+                }
+        ).toList();
+        return categoryDTOList;
     }
 
     public Category findById(Integer idCategory) {
