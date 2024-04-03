@@ -15,7 +15,7 @@ import lombok.*;
 @Table(name = "tb_task")
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String description;
     private LocalDateTime initialDateAndHours;
