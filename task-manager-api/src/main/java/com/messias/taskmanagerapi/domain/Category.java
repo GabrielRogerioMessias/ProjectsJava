@@ -21,7 +21,7 @@ public class Category {
     @Column(unique = true)
     private String description;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "category")
     private List<Task> tasksLis;
 

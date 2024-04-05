@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -28,15 +29,17 @@ public class CategoryService {
 
 
     public List<CategoryDTO> findAllCategoriesByIdUser(UUID idUser) {
+
         List<Category> categoryList = categoryRepository.findAllCategoryByIdUser(idUser);
-        List<CategoryDTO> categoryDTOList = categoryList.stream().map(
-                category -> {
-                    CategoryDTO categoryDTO = new CategoryDTO(category.getDescription());
-                   return categoryDTO;
-                }
-        ).toList();
+    List<CategoryDTO> categoryDTOList = categoryList.stream().map(
+            e-> {
+                CategoryDTO result = new CategoryDTO(e.getDescription());
+                return result;
+            }
+    ).toList();
         return categoryDTOList;
     }
+
 
     public Category findById(Integer idCategory) {
         try {

@@ -1,5 +1,6 @@
 package com.messias.taskmanagerapi.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,6 +29,7 @@ public class User {
     private LocalDate birthDate;
     @OneToMany(mappedBy = "user")
     private List<Task> taskList;
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Category> categoryList;
 }
