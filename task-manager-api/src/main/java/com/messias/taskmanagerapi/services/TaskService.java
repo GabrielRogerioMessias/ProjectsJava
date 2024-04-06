@@ -2,6 +2,7 @@ package com.messias.taskmanagerapi.services;
 
 import com.messias.taskmanagerapi.domain.Task;
 import com.messias.taskmanagerapi.repositories.TaskRepository;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,5 +19,6 @@ public class TaskService {
     public List<Task> findAllTaks(UUID idUser) {
         return taskRepository.allTaksByIdUser(idUser);
     }
+
 
 }
