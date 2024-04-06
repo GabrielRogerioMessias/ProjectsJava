@@ -61,5 +61,15 @@ public class CategoryService {
         }
     }
 
+    public Category update(Integer idOldCategory, Category updateCategory) {
+        Category oldCategory = categoryRepository.findById(idOldCategory).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
+        this.updateData(oldCategory, updateCategory);
+        return categoryRepository.save(oldCategory);
+    }
+
+    public void updateData(Category oldCategory, Category updateCategory) {
+        oldCategory.setDescription(updateCategory.getDescription());
+    }
+
 
 }

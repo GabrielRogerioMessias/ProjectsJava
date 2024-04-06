@@ -37,9 +37,16 @@ public class CategoryController {
         List<Category> list = categoryService.findAllCategoriesByIdUser(idUser);
         return ResponseEntity.ok().body(list);
     }
+
     @DeleteMapping(value = "/{idCategory}")
-    public ResponseEntity<Void> delete(@PathVariable Integer idCategory){
+    public ResponseEntity<Void> delete(@PathVariable Integer idCategory) {
         categoryService.delete(idCategory);
         return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping(value = "/{idOldCategory}")
+    public ResponseEntity<Category> update(@PathVariable Integer idOldCategory, @RequestBody Category updateCat) {
+        Category updateCategory = categoryService.update(idOldCategory, updateCat);
+        return ResponseEntity.ok().body(updateCategory);
     }
 }
