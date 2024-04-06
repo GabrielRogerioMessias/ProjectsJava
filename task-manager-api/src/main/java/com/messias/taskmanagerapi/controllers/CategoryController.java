@@ -1,7 +1,6 @@
 package com.messias.taskmanagerapi.controllers;
 
 import com.messias.taskmanagerapi.domain.Category;
-import com.messias.taskmanagerapi.domain.dtos.CategoryDTO;
 import com.messias.taskmanagerapi.services.CategoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,9 +26,15 @@ public class CategoryController {
         return ResponseEntity.created(uri).body(newCategory);
     }
 
-    @GetMapping(value = "/{idUser}")
-    public ResponseEntity<List<CategoryDTO>> findAll(@PathVariable UUID idUser) {
-        List<CategoryDTO> list = categoryService.findAllCategoriesByIdUser(idUser);
+    @GetMapping(value = "/{idCategory}")
+    public ResponseEntity<Category> findById(@PathVariable Integer idCategory) {
+        Category categoryResult = categoryService.findById(idCategory);
+        return ResponseEntity.ok().body(categoryResult);
+    }
+
+    @GetMapping(value = "user/{idUser}")
+    public ResponseEntity<List<Category>> findAll(@PathVariable UUID idUser) {
+        List<Category> list = categoryService.findAllCategoriesByIdUser(idUser);
         return ResponseEntity.ok().body(list);
     }
 }
