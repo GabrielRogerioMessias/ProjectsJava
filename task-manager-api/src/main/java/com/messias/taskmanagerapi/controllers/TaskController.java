@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.UUID;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping(value = "tasks")
@@ -25,5 +26,11 @@ public class TaskController {
     public ResponseEntity<List<TaskDTO>> findAllTasks(@PathVariable UUID idUser) {
         List<TaskDTO> taskList = taskService.findAllTaks(idUser);
         return ResponseEntity.ok().body(taskList);
+    }
+
+    @GetMapping(value = "/{idTask}")
+    public ResponseEntity<Task> findById(@PathVariable Integer idTask) {
+        Task resulTask = taskService.findById(idTask);
+        return ResponseEntity.ok().body(resulTask);
     }
 }

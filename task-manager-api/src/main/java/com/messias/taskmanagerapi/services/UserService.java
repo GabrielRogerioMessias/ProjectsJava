@@ -8,7 +8,6 @@ import com.messias.taskmanagerapi.services.exceptions.UserAlreadyRegistered;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.*;
 
 @Service
@@ -52,13 +51,13 @@ public class UserService {
                 user -> {
                     UserDTO userDTO = new UserDTO(user.getId(), user.getName(), user.getSurname(), user.getBirthDate());
                     return userDTO;
-                }
-        ).toList();
+                }).toList();
         return allUsersDTO;
     }
 
     public UserDTO updateUser(UUID idOldUser, UserDTO updateUser) {
-        User oldUser = userRepository.findById(idOldUser).orElseThrow(() -> new ResourceNotFoundException(User.class, idOldUser));
+        User oldUser = userRepository.findById(idOldUser)
+                .orElseThrow(() -> new ResourceNotFoundException(User.class, idOldUser));
         updateData(oldUser, updateUser);
         userRepository.save(oldUser);
         return convertDate(oldUser);
