@@ -9,6 +9,6 @@ import java.util.List;
 import java.util.UUID;
 
 public interface TaskRepository extends JpaRepository<Task, Integer> {
-    @Query("SELECT T FROM Task T WHERE T.user = :idUser")
-    List<Task> allTaksByIdUser(@Param("idUser") UUID idUser);
+    @Query("select t from Task as t where t.user.id =:idUser")
+    List<Task> allTasksByIdUser(@Param("idUser") UUID idUser);
 }

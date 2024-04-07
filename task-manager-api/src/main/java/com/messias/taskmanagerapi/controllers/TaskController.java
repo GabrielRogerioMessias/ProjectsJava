@@ -1,6 +1,7 @@
 package com.messias.taskmanagerapi.controllers;
 
 import com.messias.taskmanagerapi.domain.Task;
+import com.messias.taskmanagerapi.domain.dtos.TaskDTO;
 import com.messias.taskmanagerapi.services.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +21,9 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping(value = "/{idUser}")
-    public ResponseEntity<List<Task>> findAllTasks(@PathVariable UUID idUser) {
-        List<Task> taskList = taskService.findAllTaks(idUser);
+    @GetMapping(value = "/user/{idUser}")
+    public ResponseEntity<List<TaskDTO>> findAllTasks(@PathVariable UUID idUser) {
+        List<TaskDTO> taskList = taskService.findAllTaks(idUser);
         return ResponseEntity.ok().body(taskList);
     }
 }
