@@ -1,11 +1,9 @@
 package com.messias.taskmanagerapi.domain;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.util.List;
-
 
 @Entity
 @Data
@@ -21,9 +19,8 @@ public class Category {
     @Column(unique = true)
     private String description;
 
-
     @OneToMany(mappedBy = "category")
-    private List<Task> tasksLis;
+    private List<Task> tasksList;
 
     @ManyToOne
     @JoinColumn(name = "id_user")
