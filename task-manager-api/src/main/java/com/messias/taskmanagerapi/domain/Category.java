@@ -5,8 +5,7 @@ import lombok.*;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -15,7 +14,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_category")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +22,7 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
+    @JsonIgnore
     private List<Task> tasksList;
 
     @ManyToOne

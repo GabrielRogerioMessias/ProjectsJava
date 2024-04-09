@@ -1,11 +1,11 @@
 package com.messias.taskmanagerapi.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,7 +18,6 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_user")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -30,8 +29,13 @@ public class User {
     private String password;
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthDate;
+    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Task> taskList;
+
+    @JsonManagedReference
+    @JsonIgnore
     @OneToMany(mappedBy = "user")
     private List<Category> categoryList;
 }

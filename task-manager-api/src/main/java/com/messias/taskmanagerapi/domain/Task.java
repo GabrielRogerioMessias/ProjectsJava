@@ -2,8 +2,7 @@ package com.messias.taskmanagerapi.domain;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +14,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "tb_task")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

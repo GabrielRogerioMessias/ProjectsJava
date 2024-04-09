@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -33,7 +34,8 @@ public class TaskService {
         List<Task> taskList = taskRepository.allTasksByIdUser(idUser);
         List<TaskDTO> taskDTOS = taskList.stream().map(
                 task -> {
-                    TaskDTO taskDTO = new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours());
+                    TaskDTO taskDTO = new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(),
+                            task.getCategory());
                     return taskDTO;
                 }).toList();
         return taskDTOS;
@@ -73,16 +75,30 @@ public class TaskService {
 
     }
 
-    private Task updateTask(Integer idTask, Task updateTask) {
+    public TaskDTO updateTask(Integer idTask, Task updateTask) {
         Task oldTask = taskRepository.findById(idTask)
                 .orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
+        if (updateTask.getCategory() != null) {
+            if (updateTask.getCategory().getId() != null) {
+                Category updateCategory = categoryRepository.findById(updateTask.getCategory().getId())
+                        .orElseThrow(() -> new ResourceNotFoundException(Task.class, updateTask.getCategory().getId()));
+                oldTask.setCategory(updateCategory);
+                updateCategory.getTasksList().add(oldTask);
+                categoryRepository.save(updateCategory);
+            }
+        }
         updateData(oldTask, updateTask);
-        return taskRepository.save(oldTask);
+        taskRepository.save(oldTask);
+        return this.converTaskDTO(oldTask);
 
     }
 
     private void updateData(Task oldTask, Task updateTask) {
         oldTask.setDescription(updateTask.getDescription());
+    }
+
+    private TaskDTO converTaskDTO(Task task) {
+        return new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(), task.getCategory());
     }
 
 }

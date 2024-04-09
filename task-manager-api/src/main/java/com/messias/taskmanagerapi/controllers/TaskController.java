@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping(value = "tasks")
@@ -43,6 +44,12 @@ public class TaskController {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(newTask.getId())
                 .toUri();
         return ResponseEntity.created(uri).body(newTask);
+    }
+
+    @PutMapping("/{idTask}")
+    public ResponseEntity<TaskDTO> updateTask(@PathVariable Integer idTask, @RequestBody Task updateTask) {
+        TaskDTO update = taskService.updateTask(idTask, updateTask);
+        return ResponseEntity.ok().body(update);
     }
 
 }
