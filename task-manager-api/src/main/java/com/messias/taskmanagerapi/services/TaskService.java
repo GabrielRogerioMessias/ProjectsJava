@@ -15,8 +15,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
-import javax.management.RuntimeErrorException;
-
 @Service
 public class TaskService {
 
@@ -73,6 +71,18 @@ public class TaskService {
             return null;
         }
 
+    }
+
+    private Task updateTask(Integer idTask, Task updateTask) {
+        Task oldTask = taskRepository.findById(idTask)
+                .orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
+        updateData(oldTask, updateTask);
+        return taskRepository.save(oldTask);
+
+    }
+
+    private void updateData(Task oldTask, Task updateTask) {
+        oldTask.setDescription(updateTask.getDescription());
     }
 
 }
