@@ -19,6 +19,7 @@ public class Task {
     private String description;
     private LocalDateTime initialDateAndHours;
     private LocalDateTime finalDateAndHours;
+    private LocalDateTime expectedEndDate;
     private Long elapsedDays;
     private Long elapsedMinutes;
     private Long elapsedHours;
