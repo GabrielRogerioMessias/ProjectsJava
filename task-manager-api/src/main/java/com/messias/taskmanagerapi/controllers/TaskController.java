@@ -46,10 +46,16 @@ public class TaskController {
         return ResponseEntity.created(uri).body(newTask);
     }
 
-    @PutMapping("/{idTask}")
+    @PutMapping(value = "/{idTask}")
     public ResponseEntity<TaskDTO> updateTask(@PathVariable Integer idTask, @RequestBody Task updateTask) {
         TaskDTO update = taskService.updateTask(idTask, updateTask);
         return ResponseEntity.ok().body(update);
+    }
+
+    @PutMapping(value = "/finish/{idTaskCompleted}")
+    public ResponseEntity<Task> finishTask(@PathVariable Integer idTaskCompleted) {
+        Task taskCompleted = taskService.finishTask(idTaskCompleted);
+        return ResponseEntity.ok().body(taskCompleted);
     }
 
 }

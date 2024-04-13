@@ -8,12 +8,13 @@ import com.messias.taskmanagerapi.repositories.CategoryRepository;
 import com.messias.taskmanagerapi.repositories.TaskRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
+import com.messias.taskmanagerapi.services.exceptions.TaskAlreadyFinishedException;
 
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -91,6 +92,29 @@ public class TaskService {
         taskRepository.save(oldTask);
         return this.converTaskDTO(oldTask);
 
+    }
+
+    public Task finishTask(Integer idTask) {
+        Task task = taskRepository.findById(idTask)
+                .orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
+        if (task.getStatus() == null) {
+            task.setStatus(false);
+        }
+        if (task.getStatus() != false) {
+            throw new TaskAlreadyFinishedException(
+                    "Task " + task.getDescription() + " already finished in " + task.getFinalDateAndHours());
+        } else {
+            task.setFinalDateAndHours(LocalDateTime.now());
+            if (task.getInitialDateAndHours() != null && task.getFinalDateAndHours() != null) {
+                Duration duration = Duration.between(task.getInitialDateAndHours(), task.getFinalDateAndHours());
+                task.setElapsedDays(duration.toDays());
+                task.setElapsedMinutes(duration.toMinutes());
+                task.setElapsedSeconds(duration.toSeconds());
+                task.setElapsedHours(duration.toHours());
+            }
+            task.setStatus(true);
+            return taskRepository.save(task);
+        }
     }
 
     private void updateData(Task oldTask, Task updateTask) {

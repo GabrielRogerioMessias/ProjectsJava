@@ -2,8 +2,6 @@ package com.messias.taskmanagerapi.domain;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -21,10 +19,11 @@ public class Task {
     private String description;
     private LocalDateTime initialDateAndHours;
     private LocalDateTime finalDateAndHours;
-    private LocalDateTime elapsedTime;
     private Long elapsedDays;
     private Long elapsedMinutes;
+    private Long elapsedHours;
     private Long elapsedSeconds;
+    private Boolean status;
     @ManyToOne
     @JoinColumn(name = "id_category")
     private Category category;
