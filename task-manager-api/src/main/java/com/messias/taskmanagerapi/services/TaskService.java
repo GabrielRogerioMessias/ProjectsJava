@@ -36,7 +36,9 @@ public class TaskService {
         List<TaskDTO> taskDTOS = taskList.stream().map(
                 task -> {
                     TaskDTO taskDTO = new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(),
-                            task.getCategory());
+                            task.getStatus(),
+                            task.getCategory(), task.getExpectedEndDate(), task.getElapsedDays(),
+                            task.getElapsedMinutes(), task.getElapsedHours());
                     return taskDTO;
                 }).toList();
         return taskDTOS;
@@ -122,7 +124,9 @@ public class TaskService {
     }
 
     private TaskDTO converTaskDTO(Task task) {
-        return new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(), task.getCategory());
+        return new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(), task.getStatus(),
+                task.getCategory(),
+                task.getExpectedEndDate(), task.getElapsedDays(), task.getElapsedMinutes(), task.getElapsedHours());
     }
 
 }
