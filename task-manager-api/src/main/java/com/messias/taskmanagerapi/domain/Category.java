@@ -21,6 +21,10 @@ public class Category {
     @Column(unique = true)
     private String description;
 
+    public Category(String description) {
+        this.description = description;
+    }
+
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Task> tasksList;
