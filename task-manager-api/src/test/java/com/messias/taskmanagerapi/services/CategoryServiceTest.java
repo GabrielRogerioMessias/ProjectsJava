@@ -10,10 +10,12 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,5 +51,17 @@ class CategoryServiceTest {
         assertEquals(categoryList, result);
         assertThat(result).hasSize(2);
         assertThat(result.get(0)).isEqualTo(categoryList.get(0));
+    }
+
+    @Test
+    @DisplayName("When category deletion was successfully ")
+    void deleteCategory() {
+        Integer idCategory = 1;
+        Category category = new Category(idCategory, "Category Test1");
+        when(categoryRepository.findById(idCategory)).thenReturn(Optional.of(category));
+        doNothing().when(categoryRepository).delete(category);
+        assertDoesNotThrow(()-> categoryService.delete(idCategory));
+        verify(categoryRepository).delete(category);
+        verify(categoryRepository).findById(idCategory);
     }
 }
