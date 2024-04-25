@@ -1,5 +1,6 @@
 package com.messias.taskmanagerapi.controllers.exceptions;
 
+import com.messias.taskmanagerapi.services.exceptions.NullEntityFieldException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.services.exceptions.TaskAlreadyFinishedException;
 import com.messias.taskmanagerapi.services.exceptions.UserAlreadyRegistered;
@@ -25,7 +26,7 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<StandardError> userAlreadyRegistered(ResourceNotFoundException e,
-            HttpServletRequest request) {
+                                                               HttpServletRequest request) {
         String error = "Resource not found exception";
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
@@ -35,11 +36,19 @@ public class ControllerExceptionHandler {
 
     @ExceptionHandler(TaskAlreadyFinishedException.class)
     public ResponseEntity<StandardError> taskAlreadyFinished(TaskAlreadyFinishedException e,
-            HttpServletRequest request) {
+                                                             HttpServletRequest request) {
         String error = "Task already finished";
         HttpStatus status = HttpStatus.CONFLICT;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(),
                 request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(NullEntityFieldException.class)
+    public ResponseEntity<StandardError> userFieldsNull(NullEntityFieldException e, HttpServletRequest request) {
+        String error = "User fields cannot be null or empty";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
 }
