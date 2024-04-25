@@ -4,8 +4,10 @@ import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.domain.dtos.UserDTO;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.NullEntityFieldException;
+import com.messias.taskmanagerapi.services.exceptions.PasswordIsNotPatterException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.services.exceptions.UserAlreadyRegistered;
+import com.messias.taskmanagerapi.utils.VerifyPatternPassword;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -18,10 +20,12 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final Validator validator;
+    private final VerifyPatternPassword validatePatternPassword;
 
-    public UserService(UserRepository userRepository, Validator validator) {
+    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword validatePatternPassword) {
         this.userRepository = userRepository;
         this.validator = validator;
+        this.validatePatternPassword = validatePatternPassword;
     }
 
     public void deleteUser(UUID idUser) {
@@ -45,7 +49,11 @@ public class UserService {
 
     public void insertNewUser(User newUser) {
         try {
-            userRepository.save(newUser);
+            if (this.validatePatternPassword.verifyPassword(newUser.getPassword())) {
+                userRepository.save(newUser);
+            } else {
+                throw new PasswordIsNotPatterException();
+            }
         } catch (DataIntegrityViolationException e) {
             throw new UserAlreadyRegistered("User already registered with username: " + newUser.getUsername());
         } catch (TransactionSystemException exception) {
