@@ -1,6 +1,7 @@
 package com.messias.taskmanagerapi.utils;
 
 
+import com.messias.taskmanagerapi.services.exceptions.PasswordIsNotPatterException;
 import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
@@ -13,6 +14,12 @@ public class VerifyPatternPassword {
 
     public Boolean verifyPassword(String password) {
         Matcher matcher = pattern.matcher(password);
-        return matcher.find();
+        if (matcher.find() && !password.isEmpty()) {
+            return true;
+        } else if (password.isBlank()) {
+            return false;
+        } else {
+            throw new PasswordIsNotPatterException();
+        }
     }
 }

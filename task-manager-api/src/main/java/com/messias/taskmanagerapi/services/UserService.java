@@ -21,11 +21,13 @@ public class UserService {
     private final UserRepository userRepository;
     private final Validator validator;
     private final VerifyPatternPassword validatePatternPassword;
+    private final VerifyPatternPassword verifyPatternPassword;
 
-    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword validatePatternPassword) {
+    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword validatePatternPassword, VerifyPatternPassword verifyPatternPassword) {
         this.userRepository = userRepository;
         this.validator = validator;
         this.validatePatternPassword = validatePatternPassword;
+        this.verifyPatternPassword = verifyPatternPassword;
     }
 
     public void deleteUser(UUID idUser) {
@@ -49,11 +51,8 @@ public class UserService {
 
     public void insertNewUser(User newUser) {
         try {
-            if (this.validatePatternPassword.verifyPassword(newUser.getPassword())) {
-                userRepository.save(newUser);
-            } else {
-                throw new PasswordIsNotPatterException();
-            }
+            verifyPatternPassword.verifyPassword(newUser.getPassword());
+            userRepository.save(newUser);
         } catch (DataIntegrityViolationException e) {
             throw new UserAlreadyRegistered("User already registered with username: " + newUser.getUsername());
         } catch (TransactionSystemException exception) {
