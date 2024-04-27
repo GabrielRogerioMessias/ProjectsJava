@@ -21,6 +21,15 @@ public class Category {
     @Column(unique = true)
     private String description;
 
+    public Category(Integer id, String description) {
+        this.id = id;
+        this.description = description;
+    }
+
+    public Category(String description) {
+        this.description = description;
+    }
+
     @OneToMany(mappedBy = "category")
     @JsonIgnore
     private List<Task> tasksList;
@@ -28,5 +37,6 @@ public class Category {
     @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
+
 
 }

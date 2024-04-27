@@ -31,7 +31,7 @@ public class TaskService {
         this.categoryRepository = categoryRepository;
     }
 
-    public List<TaskDTO> findAllTaks(UUID idUser) {
+    public List<TaskDTO> findAllTasks(UUID idUser) {
         List<Task> taskList = taskRepository.allTasksByIdUser(idUser);
         List<TaskDTO> taskDTOS = taskList.stream().map(
                 task -> {

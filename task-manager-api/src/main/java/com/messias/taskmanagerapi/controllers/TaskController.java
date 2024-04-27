@@ -28,7 +28,7 @@ public class TaskController {
 
     @GetMapping(value = "/user/{idUser}")
     public ResponseEntity<List<TaskDTO>> findAllTasks(@PathVariable UUID idUser) {
-        List<TaskDTO> taskList = taskService.findAllTaks(idUser);
+        List<TaskDTO> taskList = taskService.findAllTasks(idUser);
         return ResponseEntity.ok().body(taskList);
     }
 
