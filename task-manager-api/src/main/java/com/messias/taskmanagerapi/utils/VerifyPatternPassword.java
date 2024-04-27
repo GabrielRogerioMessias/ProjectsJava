@@ -16,8 +16,6 @@ public class VerifyPatternPassword {
         Matcher matcher = pattern.matcher(password);
         if (matcher.find() && !password.isEmpty()) {
             return true;
-        } else if (password.isBlank()) {
-            return false;
         } else {
             throw new PasswordIsNotPatterException();
         }

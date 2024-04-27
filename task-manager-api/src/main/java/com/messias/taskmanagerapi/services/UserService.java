@@ -20,13 +20,11 @@ import java.util.*;
 public class UserService {
     private final UserRepository userRepository;
     private final Validator validator;
-    private final VerifyPatternPassword validatePatternPassword;
     private final VerifyPatternPassword verifyPatternPassword;
 
-    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword validatePatternPassword, VerifyPatternPassword verifyPatternPassword) {
+    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword verifyPatternPassword) {
         this.userRepository = userRepository;
         this.validator = validator;
-        this.validatePatternPassword = validatePatternPassword;
         this.verifyPatternPassword = verifyPatternPassword;
     }
 

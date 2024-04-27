@@ -3,6 +3,7 @@ package com.messias.taskmanagerapi.controllers;
 import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.domain.dtos.UserDTO;
 import com.messias.taskmanagerapi.services.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/users")
+@Tag(name = "Users", description = "Endpoints for Manager Users")
 public class UserController {
     private final UserService userService;
 

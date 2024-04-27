@@ -3,6 +3,7 @@ package com.messias.taskmanagerapi.controllers;
 import com.messias.taskmanagerapi.domain.Task;
 import com.messias.taskmanagerapi.domain.dtos.TaskDTO;
 import com.messias.taskmanagerapi.services.TaskService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping(value = "tasks")
+@Tag(name = "Task", description = "Endpoints for Manager Tasks")
 public class TaskController {
     private final TaskService taskService;
 

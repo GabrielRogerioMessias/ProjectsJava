@@ -2,6 +2,7 @@ package com.messias.taskmanagerapi.controllers;
 
 import com.messias.taskmanagerapi.domain.Category;
 import com.messias.taskmanagerapi.services.CategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -12,6 +13,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "categories")
+@Tag(name = "Category", description = "Endpoints for Manager Categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
