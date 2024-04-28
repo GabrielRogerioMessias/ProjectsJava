@@ -25,14 +25,14 @@ public class TaskService {
     private final CategoryRepository categoryRepository;
 
     public TaskService(TaskRepository taskRepository, UserRepository userRepository,
-            CategoryRepository categoryRepository) {
+                       CategoryRepository categoryRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
     }
 
     public List<TaskDTO> findAllTasks(UUID idUser) {
-        List<Task> taskList = taskRepository.allTasksByIdUser(idUser);
+        List<Task> taskList = taskRepository.findAllTasks(idUser);
         List<TaskDTO> taskDTOS = taskList.stream().map(
                 task -> {
                     TaskDTO taskDTO = new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(),
@@ -43,6 +43,7 @@ public class TaskService {
                 }).toList();
         return taskDTOS;
     }
+
 
     public Task findById(Integer idTask) {
         Task task = taskRepository.findById(idTask)
