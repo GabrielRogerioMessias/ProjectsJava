@@ -11,13 +11,16 @@ import com.messias.taskmanagerapi.utils.VerifyPatternPassword;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
 import java.util.*;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final Validator validator;
     private final VerifyPatternPassword verifyPatternPassword;
@@ -94,4 +97,14 @@ public class UserService {
     }
 
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        var user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user;
+        } else {
+            throw new UsernameNotFoundException("Username: " + username + " not found ");
+        }
+
+    }
 }
