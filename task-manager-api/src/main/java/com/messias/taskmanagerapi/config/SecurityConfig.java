@@ -47,14 +47,16 @@ public class SecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(
                         authorizeHttpRequests -> authorizeHttpRequests
-                                .requestMatchers(HttpMethod.POST, "permissions").permitAll()
+                                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
+                                // Permitir todas as requisições POST para a rota "permissions"
+                                .requestMatchers(HttpMethod.POST, "/permissions").permitAll()
+                                // Exigir autenticação para todas as outras requisições
                                 .anyRequest().authenticated()
-//                                .requestMatchers("/api/**").authenticated()
-//                                .requestMatchers("/users").denyAll()
                 )
                 .cors(cors -> {
                 })
                 .build();
     }
+
 
 }
