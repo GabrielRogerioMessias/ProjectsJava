@@ -1,7 +1,9 @@
 package com.messias.taskmanagerapi.services;
 
+import com.messias.taskmanagerapi.domain.Permission;
 import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.domain.dtos.UserDTO;
+import com.messias.taskmanagerapi.repositories.PermissionRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.NullEntityFieldException;
 import com.messias.taskmanagerapi.services.exceptions.PasswordIsNotPatterException;
@@ -14,6 +16,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
@@ -24,11 +28,13 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final Validator validator;
     private final VerifyPatternPassword verifyPatternPassword;
+    private final PermissionRepository permissionRepository;
 
-    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword verifyPatternPassword) {
+    public UserService(UserRepository userRepository, Validator validator, VerifyPatternPassword verifyPatternPassword, PermissionRepository permissionRepository) {
         this.userRepository = userRepository;
         this.validator = validator;
         this.verifyPatternPassword = verifyPatternPassword;
+        this.permissionRepository = permissionRepository;
     }
 
     public void deleteUser(UUID idUser) {
@@ -52,7 +58,19 @@ public class UserService implements UserDetailsService {
 
     public void insertNewUser(User newUser) {
         try {
+            List<Permission> permissions = permissionRepository.findAll();
+            Permission permission = new Permission("USER");
+            if (permissions.isEmpty()) {
+                permissions.add(permission);
+                permissionRepository.save(permission);
+            }
+            newUser.setPermissionList(permissions);
             verifyPatternPassword.verifyPassword(newUser.getPassword());
+            newUser.setPassword(this.encoder().encode(newUser.getPassword()));
+            newUser.setEnabled(true);
+            newUser.setCredentialsNonExpired(true);
+            newUser.setAccountNonExpired(true);
+            newUser.setAccountNonLocked(true);
             userRepository.save(newUser);
         } catch (DataIntegrityViolationException e) {
             throw new UserAlreadyRegistered("User already registered with username: " + newUser.getUsername());
@@ -105,6 +123,9 @@ public class UserService implements UserDetailsService {
         } else {
             throw new UsernameNotFoundException("Username: " + username + " not found ");
         }
+    }
 
+    private PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 }

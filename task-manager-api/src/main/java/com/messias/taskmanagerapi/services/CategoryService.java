@@ -7,6 +7,8 @@ import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceAlreadyRegisteredException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +42,9 @@ public class CategoryService {
 
     public Category insert(Category newCategory) {
         try {
-            User userCategory = userRepository.findById(newCategory.getUser().getId()).orElseThrow(() -> new ResourceNotFoundException(User.class, newCategory.getUser().getId()));
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+            User userCategory = userRepository.findByUsername(username);
             newCategory.setUser(userCategory);
             userCategory.getCategoryList().add(newCategory);
             userRepository.save(userCategory);

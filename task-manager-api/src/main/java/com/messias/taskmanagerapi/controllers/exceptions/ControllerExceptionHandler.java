@@ -1,5 +1,7 @@
 package com.messias.taskmanagerapi.controllers.exceptions;
 
+import com.messias.taskmanagerapi.security.exceptions.CustomBadCredentialsException;
+import com.messias.taskmanagerapi.security.exceptions.InvalidJwtAuthenticationException;
 import com.messias.taskmanagerapi.services.exceptions.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -55,5 +57,21 @@ public class ControllerExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(InvalidJwtAuthenticationException.class)
+    public ResponseEntity<StandardError> cannotScheduleException(InvalidJwtAuthenticationException e, HttpServletRequest request) {
+        String error = "Invalid JWT Authentication";
+        HttpStatus status = HttpStatus.FORBIDDEN;
+        StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
+    }
+
+    @ExceptionHandler(CustomBadCredentialsException.class)
+    public ResponseEntity<StandardError> cannotScheduleException(CustomBadCredentialsException e, HttpServletRequest request) {
+        String error = "Username or Password Invalid";
+        HttpStatus status = HttpStatus.UNAUTHORIZED;
+        StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(standardError);
     }
 }

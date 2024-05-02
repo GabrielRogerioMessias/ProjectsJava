@@ -61,7 +61,7 @@ public class User implements UserDetails {
     //quando o user for carregado, também carregara de forma automatica suas permissões
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_permission", joinColumns = @JoinColumn(name = "id_user"), inverseJoinColumns = @JoinColumn(name = "id_permission"))
-    private List<Permission> permissionList;
+    private List<Permission> permissionList = new ArrayList<>();
 
     @JsonManagedReference
     @JsonIgnore

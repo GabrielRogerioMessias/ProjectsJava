@@ -20,6 +20,9 @@ public class Permission implements GrantedAuthority {
     private Integer id;
     private String description;
 
+    public Permission(String description) {
+    }
+
     @Override
     public String getAuthority() {
         return description;

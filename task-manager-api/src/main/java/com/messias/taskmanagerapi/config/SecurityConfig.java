@@ -49,7 +49,8 @@ public class SecurityConfig {
                         authorizeHttpRequests -> authorizeHttpRequests
                                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/webjars/**").permitAll()
                                 // Permitir todas as requisições POST para a rota "permissions"
-                                .requestMatchers(HttpMethod.POST, "/permissions").permitAll()
+                                .requestMatchers("/users", "/users/**").permitAll()
+                                .requestMatchers("/auth/**", "/auth").permitAll()
                                 // Exigir autenticação para todas as outras requisições
                                 .anyRequest().authenticated()
                 )

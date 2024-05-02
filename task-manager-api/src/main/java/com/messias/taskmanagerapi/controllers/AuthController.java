@@ -2,6 +2,7 @@ package com.messias.taskmanagerapi.controllers;
 
 import com.messias.taskmanagerapi.config.SecurityConfig;
 import com.messias.taskmanagerapi.domain.dtos.securityDTOs.AccountCredentialsDTO;
+import com.messias.taskmanagerapi.domain.dtos.securityDTOs.TokenDTO;
 import com.messias.taskmanagerapi.security.exceptions.CustomBadCredentialsException;
 import com.messias.taskmanagerapi.services.AuthService;
 import org.springframework.http.HttpStatus;
