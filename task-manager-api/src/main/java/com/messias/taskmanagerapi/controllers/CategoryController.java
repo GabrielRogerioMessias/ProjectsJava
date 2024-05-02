@@ -56,7 +56,7 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoryResult);
     }
 
-    @GetMapping(value = "user/{idUser}")
+    @GetMapping
     @Operation(summary = "Finds all Categories",
             description = "Finds all Categories belong a User, this operation requires a ID of the User to be provided in the URL path. ",
             tags = {"Category"},
@@ -72,8 +72,8 @@ public class CategoryController {
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content)
             }
     )
-    public ResponseEntity<List<Category>> findAll(@PathVariable UUID idUser) {
-        List<Category> list = categoryService.findAllCategoriesByIdUser(idUser);
+    public ResponseEntity<List<Category>> findAll() {
+        List<Category> list = categoryService.findAllCategoriesByUsername();
         return ResponseEntity.ok().body(list);
     }
 

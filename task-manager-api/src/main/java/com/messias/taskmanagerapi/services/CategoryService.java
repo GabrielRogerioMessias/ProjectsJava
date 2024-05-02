@@ -6,6 +6,7 @@ import com.messias.taskmanagerapi.repositories.CategoryRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceAlreadyRegisteredException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
+import com.messias.taskmanagerapi.utils.AuthenticatedUser;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,31 +14,30 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
     private final UserRepository userRepository;
+    private final AuthenticatedUser authenticatedUser;
 
-    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository) {
+    public CategoryService(CategoryRepository categoryRepository, UserRepository userRepository, AuthenticatedUser authenticatedUser) {
         this.categoryRepository = categoryRepository;
         this.userRepository = userRepository;
+        this.authenticatedUser = authenticatedUser;
     }
 
 
-    public List<Category> findAllCategoriesByIdUser(UUID idUser) {
-        List<Category> categoryList = categoryRepository.findAllCategoryByIdUser(idUser);
+    public List<Category> findAllCategoriesByUsername() {
+        List<Category> categoryList = categoryRepository.findAllByUsername(this.authenticatedUser.getCurrentUser().getUsername());
         return categoryList;
     }
 
 
     public Category findById(Integer idCategory) {
-        try {
-            return categoryRepository.findById(idCategory).get();
-        } catch (NoSuchElementException exception) {
-            throw new ResourceNotFoundException(Category.class, idCategory);
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return null;
     }
 
     public Category insert(Category newCategory) {

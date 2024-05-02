@@ -6,9 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
-    @Query(value = "SELECT C FROM Category C WHERE C.user.id = :idUser")
-    List<Category> findAllCategoryByIdUser(@Param("idUser") UUID idUser);
+
+    @Query(value = "SELECT c FROM Category as c Where c.user.username = :username")
+    List<Category> findAllByUsername(@Param("username") String username);
 }

@@ -11,4 +11,5 @@ import java.util.UUID;
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("select t from Task as t where t.user.id =:idUser")
     List<Task> findAllTasks(@Param("idUser") UUID idUser);
+
 }
