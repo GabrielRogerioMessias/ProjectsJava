@@ -29,15 +29,16 @@ public class CategoryService {
 
 
     public List<Category> findAllCategoriesByUsername() {
-        List<Category> categoryList = categoryRepository.findAllByUsername(this.authenticatedUser.getCurrentUser().getUsername());
+        String username = this.authenticatedUser.getCurrentUser().getUsername();
+        List<Category> categoryList = categoryRepository.findAllByUsername(username);
         return categoryList;
     }
 
 
     public Category findById(Integer idCategory) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        return null;
+        User user = authenticatedUser.getCurrentUser();
+        Category category = categoryRepository.findByIdUsername(idCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
+        return category;
     }
 
     public Category insert(Category newCategory) {
