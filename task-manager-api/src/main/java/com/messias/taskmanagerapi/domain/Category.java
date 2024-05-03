@@ -18,7 +18,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-    @Column(unique = true)
+
+    @NonNull
     private String description;
 
     public Category(Integer id, String description) {

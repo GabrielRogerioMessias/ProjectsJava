@@ -51,6 +51,14 @@ public class ControllerExceptionHandler {
         return ResponseEntity.status(status).body(err);
     }
 
+    @ExceptionHandler(ResourceAlreadyRegisteredException.class)
+    public ResponseEntity<StandardError> categoryAlreadyRegistered(ResourceAlreadyRegisteredException e, HttpServletRequest request) {
+        String error = "Category already registered";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
+
     @ExceptionHandler(PasswordIsNotPatterException.class)
     public ResponseEntity<StandardError> userFieldsNull(PasswordIsNotPatterException e, HttpServletRequest request) {
         String error = "Password is not in patter";
@@ -74,4 +82,5 @@ public class ControllerExceptionHandler {
         StandardError standardError = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(standardError);
     }
+
 }

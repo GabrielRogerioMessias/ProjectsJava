@@ -42,17 +42,15 @@ public class CategoryService {
     }
 
     public Category insert(Category newCategory) {
-        try {
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            String username = authentication.getName();
-            User userCategory = userRepository.findByUsername(username);
-            newCategory.setUser(userCategory);
-            userCategory.getCategoryList().add(newCategory);
-            userRepository.save(userCategory);
-            return categoryRepository.save(newCategory);
-        } catch (DataIntegrityViolationException exception) {
+        User user = authenticatedUser.getCurrentUser();
+        Category category = categoryRepository.findCategoryByUser(user, newCategory.getDescription());
+        if (category != null) {
             throw new ResourceAlreadyRegisteredException(Category.class, newCategory.getDescription());
         }
+        newCategory.setUser(user);
+        user.getCategoryList().add(newCategory);
+        userRepository.save(user);
+        return categoryRepository.save(newCategory);
     }
 
     public void delete(Integer idCategory) {
