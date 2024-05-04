@@ -54,20 +54,29 @@ public class CategoryService {
     }
 
     public void delete(Integer idCategory) {
-        try {
-            Category category = categoryRepository.findById(idCategory).get();
-            categoryRepository.delete(category);
-        } catch (NoSuchElementException exception) {
+        User user = authenticatedUser.getCurrentUser();
+        Category categoryResult = categoryRepository.findById(idCategory).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
+        Category category = categoryRepository.findCategoryByUser(user, categoryResult.getDescription());
+        if (category == null) {
             throw new ResourceNotFoundException(Category.class, idCategory);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
+        } else {
+            user.getCategoryList().remove(category);
+            userRepository.save(user);
+            categoryRepository.delete(category);
         }
+
     }
 
     public Category update(Integer idOldCategory, Category updateCategory) {
-        Category oldCategory = categoryRepository.findById(idOldCategory).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
-        this.updateData(oldCategory, updateCategory);
-        return categoryRepository.save(oldCategory);
+        User user = authenticatedUser.getCurrentUser();
+        Category categoryResult = categoryRepository.findById(idOldCategory).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
+        Category oldCategory = categoryRepository.findCategoryByUser(user, categoryResult.getDescription());
+        if (oldCategory == null) {
+            throw new ResourceNotFoundException(Category.class, idOldCategory);
+        } else {
+            this.updateData(oldCategory, updateCategory);
+            return categoryRepository.save(oldCategory);
+        }
     }
 
     public void updateData(Category oldCategory, Category updateCategory) {
