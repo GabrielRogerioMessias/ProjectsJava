@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
-
+import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
 
     @Query(value = "SELECT c FROM Category as c Where c.user.username = :username")
@@ -18,9 +18,8 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     @Query(value = "SELECT c FROM Category  AS c WHERE c.id =:idCategory AND c.user.username = :username")
     Optional<Category> findByIdUsername(@Param("idCategory") Integer idCategory, @Param("username") String username);
 
-    @Query("SELECT c FROM Category c WHERE c.user = :user AND c.description = :description")
-    Category findCategoryByUser(@Param("user") User user, @Param("description") String description);
-
+    @Query("SELECT c FROM Category c WHERE c.user.id = :idUser AND c.description = :description")
+    Category findCategoryByUser(@Param("idUser") UUID idUser, @Param("description") String description);
 
 
 }

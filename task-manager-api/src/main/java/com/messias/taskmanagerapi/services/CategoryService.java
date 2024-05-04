@@ -43,7 +43,7 @@ public class CategoryService {
 
     public Category insert(Category newCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category category = categoryRepository.findCategoryByUser(user, newCategory.getDescription());
+        Category category = categoryRepository.findCategoryByUser(user.getId(), newCategory.getDescription());
         if (category != null) {
             throw new ResourceAlreadyRegisteredException(Category.class, newCategory.getDescription());
         }
@@ -55,28 +55,18 @@ public class CategoryService {
 
     public void delete(Integer idCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category categoryResult = categoryRepository.findById(idCategory).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
-        Category category = categoryRepository.findCategoryByUser(user, categoryResult.getDescription());
-        if (category == null) {
-            throw new ResourceNotFoundException(Category.class, idCategory);
-        } else {
-            user.getCategoryList().remove(category);
-            userRepository.save(user);
-            categoryRepository.delete(category);
-        }
-
+        Category category = categoryRepository.findByIdUsername(idCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
+        user.getCategoryList().remove(category);
+        userRepository.save(user);
+        categoryRepository.delete(category);
     }
 
     public Category update(Integer idOldCategory, Category updateCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category categoryResult = categoryRepository.findById(idOldCategory).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
-        Category oldCategory = categoryRepository.findCategoryByUser(user, categoryResult.getDescription());
-        if (oldCategory == null) {
-            throw new ResourceNotFoundException(Category.class, idOldCategory);
-        } else {
-            this.updateData(oldCategory, updateCategory);
-            return categoryRepository.save(oldCategory);
-        }
+        Category oldCategory = categoryRepository.findByIdUsername(idOldCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
+        this.updateData(oldCategory, updateCategory);
+        return categoryRepository.save(oldCategory);
+
     }
 
     public void updateData(Category oldCategory, Category updateCategory) {
