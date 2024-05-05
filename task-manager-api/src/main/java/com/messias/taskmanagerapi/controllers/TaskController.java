@@ -10,19 +10,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.UUID;
-
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping(value = "tasks")
@@ -34,7 +26,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping(value = "/user/{idUser}")
+    @GetMapping
     @Operation(
             summary = "Finds all Tasks",
             description = "Find all Tasks belong a User, this operator requires a ID of the User to be provided in the URl path ",
@@ -48,8 +40,8 @@ public class TaskController {
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(schema = @Schema(hidden = true))),
             }
     )
-    public ResponseEntity<List<TaskDTO>> findAllTasks(@PathVariable UUID idUser) {
-        List<TaskDTO> taskList = taskService.findAllTasks(idUser);
+    public ResponseEntity<List<TaskDTO>> findAllTasks() {
+        List<TaskDTO> taskList = taskService.findAllTasks();
         return ResponseEntity.ok().body(taskList);
     }
 
@@ -117,6 +109,22 @@ public class TaskController {
     public ResponseEntity<Task> finishTask(@PathVariable Integer idTaskCompleted) {
         Task taskCompleted = taskService.finishTask(idTaskCompleted);
         return ResponseEntity.ok().body(taskCompleted);
+    }
+
+    @DeleteMapping(value = "/{idTask}")
+    @Operation(
+            summary = "Delete a Task",
+            description = "Delete a Task - this operation requires a ID of the Task to be provied in the URL path to delete the task",
+            tags = {"Task"},
+            responses = {
+                    @ApiResponse(description = "Success - task deleted", responseCode = "204"),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
+                    @ApiResponse(description = "Not Found", responseCode = "404")
+            }
+    )
+    public ResponseEntity<Void> deleteTask(@PathVariable Integer idTask) {
+        taskService.delete(idTask);
+        return ResponseEntity.noContent().build();
     }
 
 }

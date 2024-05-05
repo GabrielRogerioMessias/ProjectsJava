@@ -10,6 +10,7 @@ import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.services.exceptions.TaskAlreadyFinishedException;
 
+import com.messias.taskmanagerapi.utils.AuthenticatedUser;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -23,61 +24,60 @@ public class TaskService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
+    private final AuthenticatedUser authenticatedUser;
 
     public TaskService(TaskRepository taskRepository, UserRepository userRepository,
-                       CategoryRepository categoryRepository) {
+                       CategoryRepository categoryRepository, AuthenticatedUser authenticatedUser) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
+        this.authenticatedUser = authenticatedUser;
     }
 
-    public List<TaskDTO> findAllTasks(UUID idUser) {
-        List<Task> taskList = taskRepository.findAllTasks(idUser);
+    public List<TaskDTO> findAllTasks() {
+        User user = this.authenticatedUser.getCurrentUser();
+        List<Task> taskList = taskRepository.findAllTasks(user.getId());
         List<TaskDTO> taskDTOS = taskList.stream().map(
                 task -> {
                     TaskDTO taskDTO = new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(),
                             task.getStatus(),
-                            task.getCategory(), task.getExpectedEndDate(), task.getElapsedDays(),
-                            task.getElapsedMinutes(), task.getElapsedHours());
+                            task.getCategory(),
+                            task.getExpectedEndDate(),
+                            task.getElapsedDays(),
+                            task.getElapsedMinutes(),
+                            task.getElapsedHours());
                     return taskDTO;
                 }).toList();
         return taskDTOS;
     }
 
-
+    //ok
     public Task findById(Integer idTask) {
-        Task task = taskRepository.findById(idTask)
-                .orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
-        return task;
+        User user = this.authenticatedUser.getCurrentUser();
+        return taskRepository.findByIdWithCorrectUser(user.getId(), idTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
     }
+
 
     public Task insertNewTask(Task newTask) {
-        try {
-            // finding User and Category
-            User userTask = userRepository.findById(newTask.getUser().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException(User.class, newTask.getUser().getId()));
-            Category categoryTask = categoryRepository.findById(newTask.getCategory().getId())
-                    .orElseThrow(() -> new ResourceNotFoundException(Category.class, newTask.getCategory().getId()));
-            // auto-incrementable attributes
-            if (newTask.getInitialDateAndHours() == null) {
-                newTask.setInitialDateAndHours(LocalDateTime.now());
-            }
-
-            newTask.setCategory(categoryTask);
-            newTask.setUser(userTask);
-
-            categoryTask.getTasksList().add(newTask);
-            userTask.getTaskList().add(newTask);
-
-            userRepository.save(userTask);
-            categoryRepository.save(categoryTask);
-            return taskRepository.save(newTask);
-        } catch (RuntimeException e) {
-            e.printStackTrace();
-            return null;
+        // finding User and Category
+        User user = this.authenticatedUser.getCurrentUser();
+        Category categoryTask = categoryRepository.findByIdUsername(newTask.getCategory().getId(), user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, newTask.getCategory().getId()));
+        // auto-incrementable attributes
+        if (newTask.getInitialDateAndHours() == null) {
+            newTask.setInitialDateAndHours(LocalDateTime.now());
         }
 
+        newTask.setCategory(categoryTask);
+        newTask.setUser(user);
+
+        categoryTask.getTasksList().add(newTask);
+        user.getTaskList().add(newTask);
+
+        userRepository.save(user);
+        categoryRepository.save(categoryTask);
+        return taskRepository.save(newTask);
     }
+
 
     public TaskDTO updateTask(Integer idTask, Task updateTask) {
         Task oldTask = taskRepository.findById(idTask)
@@ -120,6 +120,12 @@ public class TaskService {
         }
     }
 
+    public void delete(Integer idTask) {
+        User user = this.authenticatedUser.getCurrentUser();
+        Task task = taskRepository.findByIdWithCorrectUser(user.getId(), idTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
+        taskRepository.delete(task);
+    }
+
     private void updateData(Task oldTask, Task updateTask) {
         oldTask.setDescription(updateTask.getDescription());
     }
@@ -129,5 +135,6 @@ public class TaskService {
                 task.getCategory(),
                 task.getExpectedEndDate(), task.getElapsedDays(), task.getElapsedMinutes(), task.getElapsedHours());
     }
+
 
 }
