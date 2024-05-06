@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TaskService {
@@ -38,20 +37,19 @@ public class TaskService {
         User user = this.authenticatedUser.getCurrentUser();
         List<Task> taskList = taskRepository.findAllTasks(user.getId());
         List<TaskDTO> taskDTOS = taskList.stream().map(
-                task -> {
-                    TaskDTO taskDTO = new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(),
-                            task.getStatus(),
-                            task.getCategory(),
-                            task.getExpectedEndDate(),
-                            task.getElapsedDays(),
-                            task.getElapsedMinutes(),
-                            task.getElapsedHours());
-                    return taskDTO;
-                }).toList();
+                task -> new TaskDTO(
+                        task.getId(),
+                        task.getDescription(),
+                        task.getInitialDateAndHours(),
+                        task.getStatus(),
+                        task.getCategory(),
+                        task.getExpectedEndDate(),
+                        task.getElapsedDays(),
+                        task.getElapsedMinutes(),
+                        task.getElapsedHours())).toList();
         return taskDTOS;
     }
 
-    //ok
     public Task findById(Integer idTask) {
         User user = this.authenticatedUser.getCurrentUser();
         return taskRepository.findByIdWithCorrectUser(user.getId(), idTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
@@ -61,7 +59,7 @@ public class TaskService {
     public Task insertNewTask(Task newTask) {
         // finding User and Category
         User user = this.authenticatedUser.getCurrentUser();
-        Category categoryTask = categoryRepository.findByIdUsername(newTask.getCategory().getId(), user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, newTask.getCategory().getId()));
+        Category categoryTask = categoryRepository.findCategoryByCurrentUserId(newTask.getCategory().getId(), user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, newTask.getCategory().getId()));
         // auto-incrementable attributes
         if (newTask.getInitialDateAndHours() == null) {
             newTask.setInitialDateAndHours(LocalDateTime.now());
@@ -79,13 +77,12 @@ public class TaskService {
     }
 
 
-    public TaskDTO updateTask(Integer idTask, Task updateTask) {
-        Task oldTask = taskRepository.findById(idTask)
-                .orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
+    public TaskDTO updateTask(Integer idOldTask, Task updateTask) {
+        User user = this.authenticatedUser.getCurrentUser();
+        Task oldTask = taskRepository.findByIdWithCorrectUser(user.getId(), idOldTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idOldTask));
         if (updateTask.getCategory() != null) {
             if (updateTask.getCategory().getId() != null) {
-                Category updateCategory = categoryRepository.findById(updateTask.getCategory().getId())
-                        .orElseThrow(() -> new ResourceNotFoundException(Task.class, updateTask.getCategory().getId()));
+                Category updateCategory = categoryRepository.findCategoryByCurrentUserId(idOldTask, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldTask));
                 oldTask.setCategory(updateCategory);
                 updateCategory.getTasksList().add(oldTask);
                 categoryRepository.save(updateCategory);
@@ -98,12 +95,12 @@ public class TaskService {
     }
 
     public Task finishTask(Integer idTask) {
-        Task task = taskRepository.findById(idTask)
-                .orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
+        User user = this.authenticatedUser.getCurrentUser();
+        Task task = taskRepository.findByIdWithCorrectUser(user.getId(), idTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idTask));
         if (task.getStatus() == null) {
             task.setStatus(false);
         }
-        if (task.getStatus() != false) {
+        if (task.getStatus()) {
             throw new TaskAlreadyFinishedException(
                     "Task " + task.getDescription() + " already finished in " + task.getFinalDateAndHours());
         } else {
@@ -131,9 +128,15 @@ public class TaskService {
     }
 
     private TaskDTO converTaskDTO(Task task) {
-        return new TaskDTO(task.getId(), task.getDescription(), task.getInitialDateAndHours(), task.getStatus(),
+        return new TaskDTO(task.getId(),
+                task.getDescription(),
+                task.getInitialDateAndHours(),
+                task.getStatus(),
                 task.getCategory(),
-                task.getExpectedEndDate(), task.getElapsedDays(), task.getElapsedMinutes(), task.getElapsedHours());
+                task.getExpectedEndDate(),
+                task.getElapsedDays(),
+                task.getElapsedMinutes(),
+                task.getElapsedHours());
     }
 
 

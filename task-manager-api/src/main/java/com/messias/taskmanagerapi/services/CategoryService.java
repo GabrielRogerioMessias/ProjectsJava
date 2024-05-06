@@ -7,13 +7,9 @@ import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceAlreadyRegisteredException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.utils.AuthenticatedUser;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class CategoryService {
@@ -37,7 +33,7 @@ public class CategoryService {
 
     public Category findById(Integer idCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category category = categoryRepository.findByIdUsername(idCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
+        Category category = categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
         return category;
     }
 
@@ -55,7 +51,7 @@ public class CategoryService {
 
     public void delete(Integer idCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category category = categoryRepository.findByIdUsername(idCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
+        Category category = categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idCategory));
         user.getCategoryList().remove(category);
         userRepository.save(user);
         categoryRepository.delete(category);
@@ -63,7 +59,7 @@ public class CategoryService {
 
     public Category update(Integer idOldCategory, Category updateCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category oldCategory = categoryRepository.findByIdUsername(idOldCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
+        Category oldCategory = categoryRepository.findCategoryByCurrentUserId(idOldCategory, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldCategory));
         this.updateData(oldCategory, updateCategory);
         return categoryRepository.save(oldCategory);
 
