@@ -58,7 +58,7 @@ public class CategoryController {
 
     @GetMapping
     @Operation(summary = "Finds all Categories",
-            description = "Finds all Categories belong a User, this operation requires a ID of the User to be provided in the URL path. ",
+            description = "Finds all categories belong to the authenticated user",
             tags = {"Category"},
             responses = {
                     @ApiResponse(description = "Success", responseCode = "200",
