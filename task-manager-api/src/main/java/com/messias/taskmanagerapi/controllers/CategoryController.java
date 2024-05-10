@@ -34,7 +34,7 @@ public class CategoryController {
             responses = {
                     @ApiResponse(description = "Category added successfully", responseCode = "201", content = @Content(schema = @Schema(implementation = Category.class))),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(schema = @Schema(hidden = true))),
-                    @ApiResponse(description = "User not found with provided ID", responseCode = "404", content = @Content(schema = @Schema(hidden = true))),})
+            })
     public ResponseEntity<Category> insert(@RequestBody Category category) {
         Category newCategory = categoryService.insert(category);
         URI uri = (ServletUriComponentsBuilder.fromCurrentRequest().path("{/id}").buildAndExpand(category.getId()).toUri());
