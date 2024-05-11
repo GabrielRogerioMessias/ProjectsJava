@@ -29,7 +29,7 @@ public class TaskController {
     @GetMapping
     @Operation(
             summary = "Finds all Tasks",
-            description = "Find all Tasks belong a User, this operator requires a ID of the User to be provided in the URl path ",
+            description = "Find all Tasks belong a authenticated User",
             tags = {"Task"},
             responses = {
                     @ApiResponse(description = "Success - returns a list of tasks", responseCode = "200", content = {
@@ -64,12 +64,12 @@ public class TaskController {
     @PostMapping
     @Operation(
             summary = "Inserts a new Task",
-            description = "Inserts a new Task for a user, the operation requires a user ID in the JSON body.",
+            description = "Inserts a new Task for a authenticated User",
             tags = {"Task"},
             responses = {
                     @ApiResponse(description = "Task added successfully", responseCode = "201", content = @Content(schema = @Schema(implementation = Task.class))),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(schema = @Schema(hidden = true))),
-                    @ApiResponse(description = "User or Category not found with ID provided", responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
+                    @ApiResponse(description = "Category not found with ID provided", responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
             }
     )
     public ResponseEntity<Task> insert(@RequestBody Task newTask) {
@@ -82,12 +82,13 @@ public class TaskController {
     @PutMapping(value = "/{idTask}")
     @Operation(
             summary = "Update a Task",
-            description = "Update a task, this operation requires updated data in the JSON body and a new category ID. also requires the category id to be updated in the URL ",
+            description = "Update a task, this operation requires updated data in the JSON body and a new category ID. also requires the Task id to be updated in the URL ",
             tags = {"Task"},
             responses = {
                     @ApiResponse(description = "Success - task updated", responseCode = "200", content = @Content(schema = @Schema(implementation = TaskDTO.class))),
                     @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(schema = @Schema(hidden = true))),
-                    @ApiResponse(description = "Bad Request", responseCode = "404", content = @Content(schema = @Schema(hidden = true)))
+                    @ApiResponse(description = "Bad Request", responseCode = "404", content = @Content(schema = @Schema(hidden = true))),
+                    @ApiResponse(description = "Category not found with ID provided", content = @Content(schema = @Schema(hidden = true)))
             }
     )
     public ResponseEntity<TaskDTO> updateTask(@PathVariable Integer idTask, @RequestBody Task updateTask) {
@@ -114,7 +115,7 @@ public class TaskController {
     @DeleteMapping(value = "/{idTask}")
     @Operation(
             summary = "Delete a Task",
-            description = "Delete a Task - this operation requires a ID of the Task to be provied in the URL path to delete the task",
+            description = "Delete a Task - this operation requires a ID of the Task to be provided in the URL path to delete the task",
             tags = {"Task"},
             responses = {
                     @ApiResponse(description = "Success - task deleted", responseCode = "204"),

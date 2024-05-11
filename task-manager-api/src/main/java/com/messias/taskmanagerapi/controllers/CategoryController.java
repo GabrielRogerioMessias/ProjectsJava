@@ -29,7 +29,7 @@ public class CategoryController {
     @PostMapping
     @Operation(
             summary = "Inserts a new Category",
-            description = "Inserts a new category for a user, the operation requires a user ID in the JSON body.",
+            description = "insert a new category for the authenticated user",
             tags = {"Category"},
             responses = {
                     @ApiResponse(description = "Category added successfully", responseCode = "201", content = @Content(schema = @Schema(implementation = Category.class))),
