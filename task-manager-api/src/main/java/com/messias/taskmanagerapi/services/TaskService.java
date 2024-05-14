@@ -76,7 +76,11 @@ public class TaskService {
         return taskRepository.save(newTask);
     }
 
-
+    private void updateData(Task oldTask, Task updateTask) {
+        oldTask.setDescription(updateTask.getDescription());
+        oldTask.setInitialDateAndHours(updateTask.getInitialDateAndHours());
+        oldTask.setExpectedEndDate(updateTask.getExpectedEndDate());
+    }
     public TaskDTO updateTask(Integer idOldTask, Task updateTask) {
         User user = this.authenticatedUser.getCurrentUser();
         Task oldTask = taskRepository.findByIdWithCorrectUser(user.getId(), idOldTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idOldTask));
@@ -123,9 +127,7 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    private void updateData(Task oldTask, Task updateTask) {
-        oldTask.setDescription(updateTask.getDescription());
-    }
+
 
     private TaskDTO converTaskDTO(Task task) {
         return new TaskDTO(task.getId(),
