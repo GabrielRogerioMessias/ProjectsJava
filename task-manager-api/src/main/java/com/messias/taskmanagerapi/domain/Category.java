@@ -36,6 +36,7 @@ public class Category {
     private List<Task> tasksList;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "id_user")
     private User user;
 

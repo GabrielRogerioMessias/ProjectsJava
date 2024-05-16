@@ -1,5 +1,6 @@
 package com.messias.taskmanagerapi.domain;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
@@ -18,12 +19,10 @@ public class Task {
     private Integer id;
     private String description;
     private LocalDateTime initialDateAndHours;
+    private LocalDate initialDate;
+    private LocalDate expectFinalDate;
     private LocalDateTime finalDateAndHours;
-    private LocalDateTime expectedEndDate;
-    private Long elapsedDays;
     private Long elapsedMinutes;
-    private Long elapsedHours;
-    private Long elapsedSeconds;
     private Boolean status;
     @ManyToOne
     @JoinColumn(name = "id_category")

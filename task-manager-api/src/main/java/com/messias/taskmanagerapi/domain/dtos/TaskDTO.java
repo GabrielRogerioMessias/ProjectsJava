@@ -1,10 +1,18 @@
 package com.messias.taskmanagerapi.domain.dtos;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.messias.taskmanagerapi.domain.Category;
+import com.messias.taskmanagerapi.domain.User;
 
-public record TaskDTO(Integer id, String description, LocalDateTime initialDateAndHours, Boolean status,
-        Category category,
-        LocalDateTime expectedEndDate, Long elapsedDays, Long elapsedMinutes, Long elapsedHours) {
+public record TaskDTO(
+        Integer idTask,
+        String description,
+        LocalDateTime initialDateAndHours,
+        LocalDate initialDate,
+        LocalDate expectFinalDate,
+        Long elapsedMinutes,
+        Boolean status,
+        Category category){
 }

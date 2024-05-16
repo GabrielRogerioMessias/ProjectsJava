@@ -41,12 +41,12 @@ public class TaskService {
                         task.getId(),
                         task.getDescription(),
                         task.getInitialDateAndHours(),
-                        task.getStatus(),
-                        task.getCategory(),
-                        task.getExpectedEndDate(),
-                        task.getElapsedDays(),
+                        task.getInitialDate(),
+                        task.getExpectFinalDate(),
                         task.getElapsedMinutes(),
-                        task.getElapsedHours())).toList();
+                        task.getStatus(),
+                        task.getCategory()
+                )).toList();
         return taskDTOS;
     }
 
@@ -64,7 +64,6 @@ public class TaskService {
         if (newTask.getInitialDateAndHours() == null) {
             newTask.setInitialDateAndHours(LocalDateTime.now());
         }
-
         newTask.setCategory(categoryTask);
         newTask.setUser(user);
 
@@ -78,9 +77,10 @@ public class TaskService {
 
     private void updateData(Task oldTask, Task updateTask) {
         oldTask.setDescription(updateTask.getDescription());
-        oldTask.setInitialDateAndHours(updateTask.getInitialDateAndHours());
-        oldTask.setExpectedEndDate(updateTask.getExpectedEndDate());
+        oldTask.setInitialDate(oldTask.getInitialDate());
+        oldTask.setExpectFinalDate(oldTask.getExpectFinalDate());
     }
+
     public TaskDTO updateTask(Integer idOldTask, Task updateTask) {
         User user = this.authenticatedUser.getCurrentUser();
         Task oldTask = taskRepository.findByIdWithCorrectUser(user.getId(), idOldTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idOldTask));
@@ -111,10 +111,7 @@ public class TaskService {
             task.setFinalDateAndHours(LocalDateTime.now());
             if (task.getInitialDateAndHours() != null && task.getFinalDateAndHours() != null) {
                 Duration duration = Duration.between(task.getInitialDateAndHours(), task.getFinalDateAndHours());
-                task.setElapsedDays(duration.toDays());
-                task.setElapsedMinutes(duration.toMinutes());
-                task.setElapsedSeconds(duration.toSeconds());
-                task.setElapsedHours(duration.toHours());
+                task.setElapsedMinutes(duration.toDays());
             }
             task.setStatus(true);
             return taskRepository.save(task);
@@ -128,17 +125,17 @@ public class TaskService {
     }
 
 
-
     private TaskDTO converTaskDTO(Task task) {
-        return new TaskDTO(task.getId(),
+        return new TaskDTO(
+                task.getId(),
                 task.getDescription(),
                 task.getInitialDateAndHours(),
-                task.getStatus(),
-                task.getCategory(),
-                task.getExpectedEndDate(),
-                task.getElapsedDays(),
+                task.getInitialDate(),
+                task.getExpectFinalDate(),
                 task.getElapsedMinutes(),
-                task.getElapsedHours());
+                task.getStatus(),
+                task.getCategory()
+        );
     }
 
 
