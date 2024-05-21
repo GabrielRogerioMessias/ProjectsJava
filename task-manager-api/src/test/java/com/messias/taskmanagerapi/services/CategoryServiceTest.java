@@ -5,6 +5,7 @@ import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.repositories.CategoryRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
+import com.messias.taskmanagerapi.utils.AuthenticatedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -25,17 +26,24 @@ import static org.mockito.Mockito.*;
 class CategoryServiceTest {
     @InjectMocks
     CategoryService categoryService;
-
     @Mock
     UserRepository userRepository;
     @Mock
     CategoryRepository categoryRepository;
+    @Mock
+    AuthenticatedUser authenticatedUser;
+    User user = new User();
+    List<Category> categories;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+        user.setUsername("username");
+        categories = Arrays.asList(
+                new Category(1, "test"),
+                new Category(2, "test")
+        );
     }
-
 
 
     @Test
@@ -60,4 +68,16 @@ class CategoryServiceTest {
         verify(categoryRepository, never()).delete(any());
 
     }
+
+    @Test
+    void findAllCategoriesByUsername() {
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(categoryRepository.findAllByUsername(user.getUsername())).thenReturn(categories);
+        List<Category> result = categoryService.findAllCategoriesByUsername();
+        assertThat(result).hasSize(2);
+        assertEquals(categories, result);
+        verify(categoryRepository).findAllByUsername(user.getUsername());
+        verify(authenticatedUser, times(1)).getCurrentUser();
+    }
+
 }
