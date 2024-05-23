@@ -39,7 +39,8 @@ public class CategoryService {
 
     public Category insert(Category newCategory) {
         User user = authenticatedUser.getCurrentUser();
-        Category category = categoryRepository.findCategoryByUser(user.getId(), newCategory.getDescription());
+        Category category = categoryRepository.
+                findCategoryByUser(user.getId(), newCategory.getDescription());
         if (category != null) {
             throw new ResourceAlreadyRegisteredException(Category.class, newCategory.getDescription());
         }

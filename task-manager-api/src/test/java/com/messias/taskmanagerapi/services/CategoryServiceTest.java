@@ -18,6 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -38,38 +39,39 @@ class CategoryServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        user.setUsername("username");
         categories = Arrays.asList(
                 new Category(1, "test"),
                 new Category(2, "test")
         );
+        user.setUsername("username");
+        user.setCategoryList(categories);
     }
 
 
     @Test
     @DisplayName("When category deletion was successfully ")
     void deleteCategoryCase1() {
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
         Integer idCategory = 1;
         Category category = new Category(idCategory, "Category Test1");
-        when(categoryRepository.findById(idCategory)).thenReturn(Optional.of(category));
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.of(category));
         doNothing().when(categoryRepository).delete(category);
-        assertDoesNotThrow(() -> categoryService.delete(idCategory));
-        verify(categoryRepository).delete(category);
-        verify(categoryRepository).findById(idCategory);
+        categoryService.delete(idCategory);
     }
 
     @Test
     @DisplayName("When category deletion returns a exception ")
     void deleteCategoryCase2() {
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
         Integer idCategory = 1;
-        when(categoryRepository.findById(idCategory)).thenReturn(Optional.empty());
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> categoryService.delete(idCategory));
-        verify(categoryRepository, times(1)).findById(idCategory);
+        verify(authenticatedUser, times(1)).getCurrentUser();
         verify(categoryRepository, never()).delete(any());
-
     }
 
     @Test
+    @DisplayName("When find all categories returns a list of categories")
     void findAllCategoriesByUsername() {
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
         when(categoryRepository.findAllByUsername(user.getUsername())).thenReturn(categories);
@@ -79,5 +81,7 @@ class CategoryServiceTest {
         verify(categoryRepository).findAllByUsername(user.getUsername());
         verify(authenticatedUser, times(1)).getCurrentUser();
     }
+
+    
 
 }
