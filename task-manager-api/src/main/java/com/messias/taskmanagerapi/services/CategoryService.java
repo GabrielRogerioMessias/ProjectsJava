@@ -38,7 +38,7 @@ public class CategoryService {
     }
 
     public Category insert(Category newCategory) {
-        User user = authenticatedUser.getCurrentUser();
+            User user = authenticatedUser.getCurrentUser();
         Category category = categoryRepository.
                 findCategoryByUser(user.getId(), newCategory.getDescription());
         if (category != null) {

@@ -4,6 +4,7 @@ import com.messias.taskmanagerapi.domain.Category;
 import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.repositories.CategoryRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
+import com.messias.taskmanagerapi.services.exceptions.ResourceAlreadyRegisteredException;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.utils.AuthenticatedUser;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +84,7 @@ class CategoryServiceTest {
 
     @Test
     @DisplayName("when inserting a category is successful")
-    void insert() {
+    void insertCategoryCase1() {
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
         Category category = new Category(1, "sports");
         when(categoryRepository.save(category)).thenReturn(category);
@@ -91,5 +92,16 @@ class CategoryServiceTest {
         assertTrue(user.getCategoryList().contains(result));
         assertEquals(category, result);
         verify(categoryRepository, times(1)).save(category);
+    }
+
+    @Test
+    @DisplayName("When insert a category returns a error")
+    void insertCategoryCase2() {
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        Category category = new Category(1, "sports");
+        when(categoryRepository.findCategoryByUser(user.getId(), category.getDescription())).thenReturn(category);
+        assertThrows(ResourceAlreadyRegisteredException.class, () -> categoryService.insert(category));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(categoryRepository, times(1)).findCategoryByUser(user.getId(), category.getDescription());
     }
 }
