@@ -15,10 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,10 +36,11 @@ class CategoryServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        categories = Arrays.asList(
-                new Category(1, "test"),
-                new Category(2, "test")
-        );
+        categories = new ArrayList<>();
+        Category category1 = new Category(1, "test");
+        Category category2 = new Category(2, "test");
+        categories.add(category1);
+        categories.add(category2);
         user.setUsername("username");
         user.setCategoryList(categories);
     }
@@ -82,6 +80,16 @@ class CategoryServiceTest {
         verify(authenticatedUser, times(1)).getCurrentUser();
     }
 
-    
 
+    @Test
+    @DisplayName("when inserting a category is successful")
+    void insert() {
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        Category category = new Category(1, "sports");
+        when(categoryRepository.save(category)).thenReturn(category);
+        Category result = categoryService.insert(category);
+        assertTrue(user.getCategoryList().contains(result));
+        assertEquals(category, result);
+        verify(categoryRepository, times(1)).save(category);
+    }
 }
