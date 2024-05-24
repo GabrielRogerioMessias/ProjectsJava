@@ -104,4 +104,19 @@ class CategoryServiceTest {
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(categoryRepository, times(1)).findCategoryByUser(user.getId(), category.getDescription());
     }
+
+    @Test
+    @DisplayName("When update a category is successfully")
+    void updateCategoryCase1() {
+        Category categoryOld = new Category(1, "test");
+        Category categoryUpdate = new Category(1, "update");
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(categoryRepository.findCategoryByCurrentUserId(categoryOld.getId(), user.getUsername())).thenReturn(Optional.of(categoryOld));
+        when(categoryRepository.save(categoryOld)).thenReturn(categoryOld);
+        Category resul = categoryService.update(categoryOld.getId(), categoryUpdate);
+        assertEquals(categoryUpdate, resul);
+        assertEquals(categoryOld.getDescription(), categoryUpdate.getDescription());
+        verify(categoryRepository, times(1)).save(categoryOld);
+        verify(categoryRepository, times(1)).findCategoryByCurrentUserId(categoryOld.getId(), user.getUsername());
+    }
 }
