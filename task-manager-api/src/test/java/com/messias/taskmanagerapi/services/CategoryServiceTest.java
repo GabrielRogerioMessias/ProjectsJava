@@ -119,4 +119,16 @@ class CategoryServiceTest {
         verify(categoryRepository, times(1)).save(categoryOld);
         verify(categoryRepository, times(1)).findCategoryByCurrentUserId(categoryOld.getId(), user.getUsername());
     }
+
+    @Test
+    @DisplayName("When update a category returns a error")
+    void updatedCategoryCase2() {
+        Integer idCategory = 1;
+        Category categoryOld = new Category(1, "test");
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> categoryService.update(idCategory, categoryOld));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(categoryRepository, times(1)).findCategoryByCurrentUserId(idCategory, user.getUsername());
+    }
 }

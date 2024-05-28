@@ -119,8 +119,8 @@ public class TaskController {
             tags = {"Task"},
             responses = {
                     @ApiResponse(description = "Success - task deleted", responseCode = "204"),
-                    @ApiResponse(description = "Unauthorized", responseCode = "401"),
-                    @ApiResponse(description = "Not Found", responseCode = "404")
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(schema = @Schema(hidden = true))),
+                    @ApiResponse(description = "Not Found", responseCode = "404", content = @Content(schema = @Schema(hidden = true))),
             }
     )
     public ResponseEntity<Void> deleteTask(@PathVariable Integer idTask) {
