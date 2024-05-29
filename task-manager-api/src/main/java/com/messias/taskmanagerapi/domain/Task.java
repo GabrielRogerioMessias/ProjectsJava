@@ -31,4 +31,6 @@ public class Task {
     @JoinColumn(name = "id_user")
     private User user;
 
+    public Task(String description) {
+    }
 }
