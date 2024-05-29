@@ -6,6 +6,7 @@ import com.messias.taskmanagerapi.domain.User;
 import com.messias.taskmanagerapi.domain.dtos.TaskDTO;
 import com.messias.taskmanagerapi.repositories.TaskRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
+import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
 import com.messias.taskmanagerapi.utils.AuthenticatedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -20,8 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class TaskServiceTest {
@@ -78,6 +78,17 @@ public class TaskServiceTest {
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
         assertEquals(task1, result);
+    }
+
+    @Test
+    @DisplayName("when find by id returns a error")
+    void findByIdCase2() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> taskService.findById(idTask));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
     }
 
 }
