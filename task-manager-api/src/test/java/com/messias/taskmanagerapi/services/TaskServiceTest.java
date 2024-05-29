@@ -18,6 +18,7 @@ import com.messias.taskmanagerapi.repositories.CategoryRepository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,6 +39,8 @@ public class TaskServiceTest {
     User user = new User();
     List<Category> categories;
     List<Task> tasks;
+    Task task1 = new Task("test1");
+    Task task2 = new Task("test2");
 
     @BeforeEach
     public void setUp() {
@@ -45,8 +48,7 @@ public class TaskServiceTest {
         tasks = new ArrayList<>();
         categories = new ArrayList<>();
         Category category1 = new Category(1, "test");
-        Task task1 = new Task("test1");
-        Task task2 = new Task("test2");
+
         tasks.add(task1);
         tasks.add(task2);
         categories.add(category1);
@@ -55,7 +57,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("When find all returns a list of tasks")
+    @DisplayName("When find all returns a list of TaskDTOs")
     void findAllTasks() {
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
         when(taskRepository.findAllTasks(user.getId())).thenReturn(tasks);
@@ -64,6 +66,18 @@ public class TaskServiceTest {
         assertEquals(tasks.size(), result.size());
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(taskRepository, times(1)).findAllTasks(user.getId());
+    }
+
+    @Test
+    @DisplayName("when find by id returns a task")
+    void findByIdCase1() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.ofNullable(task1));
+        Task result = taskService.findById(idTask);
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+        assertEquals(task1, result);
     }
 
 }
