@@ -113,4 +113,15 @@ public class TaskServiceTest {
         verify(taskRepository, times(1)).save(task1);
     }
 
+    @Test
+    @DisplayName("When inserts a new category results a error")
+    void insertNewTaskCase2() {
+        Integer idCategory = 1;
+        task1.setCategory(category1);
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> taskService.insertNewTask(task1));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(categoryRepository, times(1)).findCategoryByCurrentUserId(idCategory, user.getUsername());
+    }
 }
