@@ -7,6 +7,7 @@ import com.messias.taskmanagerapi.domain.dtos.TaskDTO;
 import com.messias.taskmanagerapi.repositories.TaskRepository;
 import com.messias.taskmanagerapi.repositories.UserRepository;
 import com.messias.taskmanagerapi.services.exceptions.ResourceNotFoundException;
+import com.messias.taskmanagerapi.services.exceptions.TaskAlreadyFinishedException;
 import com.messias.taskmanagerapi.utils.AuthenticatedUser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -140,7 +141,7 @@ public class TaskServiceTest {
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("when delete a task returns a error")
     void deleteCategoryCase2() {
         Integer idTask = 1;
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
@@ -149,5 +150,44 @@ public class TaskServiceTest {
         verify(taskRepository, never()).delete(any());
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+    }
+
+
+    @Test
+    @DisplayName("When the task is finished")
+    void finishTaskCase1() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
+        when(taskRepository.save(task1)).thenReturn(task1);
+        Task result = taskService.finishTask(idTask);
+        assertEquals(true, result.getStatus());
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+        verify(taskRepository, times(1)).save(task1);
+    }
+
+    @Test
+    @DisplayName("when the task to be completed is not found")
+    void finishTaskCase2() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> taskService.finishTask(idTask));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("when the task to be completed is already completed")
+    void finishTaskCase3() {
+        Integer idTask = 1;
+        task1.setStatus(true);
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
+        assertThrows(TaskAlreadyFinishedException.class, () -> taskService.finishTask(idTask));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+        verify(taskRepository, never()).save(any());
     }
 }
