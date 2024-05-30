@@ -142,5 +142,12 @@ public class TaskServiceTest {
     @Test
     @DisplayName("")
     void deleteCategoryCase2() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> taskService.delete(idTask));
+        verify(taskRepository, never()).delete(any());
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
     }
 }
