@@ -124,4 +124,23 @@ public class TaskServiceTest {
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(categoryRepository, times(1)).findCategoryByCurrentUserId(idCategory, user.getUsername());
     }
+
+
+    @Test
+    @DisplayName("When delete a category results a error")
+    void deleteCategoryCase1() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
+        doNothing().when(taskRepository).delete(task1);
+        taskService.delete(idTask);
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+        verify(taskRepository, times(1)).delete(task1);
+    }
+
+    @Test
+    @DisplayName("")
+    void deleteCategoryCase2() {
+    }
 }
