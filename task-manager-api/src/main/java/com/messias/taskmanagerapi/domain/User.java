@@ -66,12 +66,12 @@ public class User implements UserDetails {
     @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<Task> taskList;
+    private List<Task> taskList = new ArrayList<>();
 
     @JsonManagedReference
     @JsonIgnore
     @OneToMany(mappedBy = "user")
-    private List<Category> categoryList;
+    private List<Category> categoryList = new ArrayList<>();
 
 
     public List<String> getRoles() {

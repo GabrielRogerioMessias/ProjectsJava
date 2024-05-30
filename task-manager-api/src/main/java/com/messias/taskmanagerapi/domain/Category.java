@@ -3,6 +3,7 @@ package com.messias.taskmanagerapi.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -33,7 +34,7 @@ public class Category {
 
     @OneToMany(mappedBy = "category")
     @JsonIgnore
-    private List<Task> tasksList;
+    private List<Task> tasksList = new ArrayList<>();
 
     @ManyToOne
     @JsonIgnore

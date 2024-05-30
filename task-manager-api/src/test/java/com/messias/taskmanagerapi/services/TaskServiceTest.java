@@ -41,18 +41,21 @@ public class TaskServiceTest {
     List<Task> tasks;
     Task task1 = new Task("test1");
     Task task2 = new Task("test2");
+    Category category1 = new Category(1, "test");
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        tasks = new ArrayList<>();
+        user = new User();
+        user.setUsername("username");
         categories = new ArrayList<>();
-        Category category1 = new Category(1, "test");
-
+        category1 = new Category(1, "test");
+        tasks = new ArrayList<>();
+        task1 = new Task("test1");
+        task2 = new Task("test2");
         tasks.add(task1);
         tasks.add(task2);
-        categories.add(category1);
-        user.setUsername("username");
+        user.setTaskList(tasks);
         user.setCategoryList(categories);
     }
 
@@ -89,6 +92,25 @@ public class TaskServiceTest {
         assertThrows(ResourceNotFoundException.class, () -> taskService.findById(idTask));
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+    }
+
+    @Test
+    @DisplayName("When inserts a new category it is successfully executed")
+    void insertNewTaskCase1() {
+        Integer idCategory = 1;
+        task1.setCategory(category1);
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.of(category1));
+        when(userRepository.save(user)).thenReturn(user);
+        when(categoryRepository.save(category1)).thenReturn(category1);
+        when(taskRepository.save(task1)).thenReturn(task1);
+        Task result = taskService.insertNewTask(task1);
+        assertEquals(task1, result);
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(categoryRepository, times(1)).findCategoryByCurrentUserId(idCategory, user.getUsername());
+        verify(userRepository, times(1)).save(user);
+        verify(categoryRepository, times(1)).save(category1);
+        verify(taskRepository, times(1)).save(task1);
     }
 
 }
