@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 
 import com.messias.taskmanagerapi.repositories.CategoryRepository;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -53,7 +54,9 @@ public class TaskServiceTest {
         category1 = new Category(1, "test");
         tasks = new ArrayList<>();
         task1 = new Task("test1");
+        task1.setInitialDate(LocalDate.of(2021, 3,28));
         task2 = new Task("test2");
+
         tasks.add(task1);
         tasks.add(task2);
         user.setTaskList(tasks);
@@ -102,8 +105,6 @@ public class TaskServiceTest {
         task1.setCategory(category1);
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
         when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.of(category1));
-        when(userRepository.save(user)).thenReturn(user);
-        when(categoryRepository.save(category1)).thenReturn(category1);
         when(taskRepository.save(task1)).thenReturn(task1);
         Task result = taskService.insertNewTask(task1);
         assertEquals(task1, result);
@@ -190,4 +191,67 @@ public class TaskServiceTest {
         verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
         verify(taskRepository, never()).save(any());
     }
+
+    @Test
+    @DisplayName("When a task update is successful and a category is not null")
+    void updateTaskCase1() {
+        Integer idTask = 1;
+        Integer idCategory = 1;
+        Task updatedTask = new Task("TEST UPDATED TASK");
+        updatedTask.setCategory(category1);
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.of(category1));
+        when(taskRepository.save(task1)).thenReturn(task1);
+        TaskDTO result = taskService.updateTask(idTask, updatedTask);
+        assertNotNull(result);
+        assertEquals(task1.getDescription(), result.description());
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(categoryRepository, times(1)).findCategoryByCurrentUserId(idCategory, user.getUsername());
+    }
+
+    @Test
+    @DisplayName("When a task update is successful and category of the update task is null")
+    void updateTaskCase2() {
+        Integer idTask = 1;
+        Task updatedTask = new Task("TEST UPDATED TASK");
+        updatedTask.setInitialDate(LocalDate.of(2024,5,28));
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
+        when(taskRepository.save(task1)).thenReturn(task1);
+        TaskDTO result = taskService.updateTask(idTask, updatedTask);
+        assertNotNull(result);
+        assertEquals(task1.getDescription(), result.description());
+        assertEquals(task1.getInitialDate(), result.initialDate());
+
+    }
+
+    @Test
+    @DisplayName("When a task update is unsuccessful because the update task category is not found")
+    void updateTaskCase3() {
+        Integer idTask = 1;
+        Integer idCategory = 1;
+        Task updatedTask = new Task("TEST UPDATED TASK");
+        updatedTask.setCategory(category1);
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
+        when(categoryRepository.findCategoryByCurrentUserId(idCategory, user.getUsername())).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTask(idTask, updatedTask));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+        verify(taskRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("When a task update is unsuccessful because the old task is not found")
+    void updateTaskCase4() {
+        Integer idTask = 1;
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.empty());
+        assertThrows(ResourceNotFoundException.class, () -> taskService.updateTask(idTask, task1));
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findByIdWithCorrectUser(user.getId(), idTask);
+        verify(taskRepository, never()).save(any());
+    }
+
 }
