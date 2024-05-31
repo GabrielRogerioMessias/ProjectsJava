@@ -45,6 +45,24 @@ public class TaskController {
         return ResponseEntity.ok().body(taskList);
     }
 
+    @Operation(
+            summary = "Finds all tasks uncompleted",
+            description = "Find all tasks uncompleted belong a authenticated user",
+            tags = {"Tasks"},
+            responses = {
+                    @ApiResponse(description = "Success - returns a list of tasks pending", responseCode = "200", content = @Content(
+                            mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TaskDTO.class))
+                    )),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content(schema = @Schema(hidden = true))),
+            }
+    )
+    @GetMapping("/uncompleted")
+    public ResponseEntity<List<TaskDTO>> findAllTasksUncompleted() {
+        List<TaskDTO> taskDTOList = taskService.findAllTaskUncompleted();
+        return ResponseEntity.ok().body(taskDTOList);
+    }
+
     @GetMapping(value = "/{idTask}")
     @Operation(
             summary = "Find Task by ID",
@@ -138,7 +156,7 @@ public class TaskController {
     )
     @GetMapping(value = "getAllTest")
     public ResponseEntity<List<TaskDTO>> listTasksTest() {
-        List<TaskDTO> listResult = taskService.findaAllTaskTest();
+        List<TaskDTO> listResult = taskService.findAllTaskTest();
         return ResponseEntity.ok().body(listResult);
     }
 }

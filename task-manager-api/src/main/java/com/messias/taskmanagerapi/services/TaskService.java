@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -51,8 +50,26 @@ public class TaskService {
         return taskDTOS;
     }
 
-    public List<TaskDTO> findaAllTaskTest() {
+    public List<TaskDTO> findAllTaskTest() {
         List<Task> taskList = taskRepository.findAll();
+        List<TaskDTO> taskDTOS = taskList.stream().map(
+                task -> new TaskDTO(
+                        task.getId(),
+                        task.getDescription(),
+                        task.getInitialDateAndHours(),
+                        task.getInitialDate(),
+                        task.getExpectFinalDate(),
+                        task.getElapsedMinutes(),
+                        task.getStatus(),
+                        task.getCategory()
+                )
+        ).toList();
+        return taskDTOS;
+    }
+
+    public List<TaskDTO> findAllTaskUncompleted() {
+        User user = this.authenticatedUser.getCurrentUser();
+        List<Task> taskList = taskRepository.findAllTasksUncompleted(user.getId());
         List<TaskDTO> taskDTOS = taskList.stream().map(
                 task -> new TaskDTO(
                         task.getId(),
