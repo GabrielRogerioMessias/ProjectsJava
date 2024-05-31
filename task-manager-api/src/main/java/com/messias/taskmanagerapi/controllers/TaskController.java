@@ -128,4 +128,17 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "List All Task",
+            description = "Returns a list os task, for testing",
+            tags = {"Task"},
+            responses = {
+                    @ApiResponse(description = "success - list of task", responseCode = "200"),
+            }
+    )
+    @GetMapping(value = "getAllTest")
+    public ResponseEntity<List<TaskDTO>> listTasksTest() {
+        List<TaskDTO> listResult = taskService.findaAllTaskTest();
+        return ResponseEntity.ok().body(listResult);
+    }
 }

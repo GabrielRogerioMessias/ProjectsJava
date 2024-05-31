@@ -56,6 +56,7 @@ public class SecurityConfig {
                                 // Permitir todas as requisições POST para a rota "permissions"
                                 .requestMatchers("/users", "/users/**").permitAll()
                                 .requestMatchers("/auth/**", "/auth").permitAll()
+                                .requestMatchers("/tasks/getAllTest").permitAll()
                                 // Exigir autenticação para todas as outras requisições
                                 .anyRequest().authenticated()
                 )
