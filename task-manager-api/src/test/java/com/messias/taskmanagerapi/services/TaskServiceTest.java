@@ -54,7 +54,7 @@ public class TaskServiceTest {
         category1 = new Category(1, "test");
         tasks = new ArrayList<>();
         task1 = new Task("test1");
-        task1.setInitialDate(LocalDate.of(2021, 3,28));
+        task1.setInitialDate(LocalDate.of(2021, 3, 28));
         task2 = new Task("test2");
 
         tasks.add(task1);
@@ -215,7 +215,7 @@ public class TaskServiceTest {
     void updateTaskCase2() {
         Integer idTask = 1;
         Task updatedTask = new Task("TEST UPDATED TASK");
-        updatedTask.setInitialDate(LocalDate.of(2024,5,28));
+        updatedTask.setInitialDate(LocalDate.of(2024, 5, 28));
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
         when(taskRepository.findByIdWithCorrectUser(user.getId(), idTask)).thenReturn(Optional.of(task1));
         when(taskRepository.save(task1)).thenReturn(task1);
@@ -254,4 +254,16 @@ public class TaskServiceTest {
         verify(taskRepository, never()).save(any());
     }
 
+    @Test
+    @DisplayName("When find all returns a list of task DTO with tasks uncompleted")
+    void findAllTaskUncompleted() {
+        when(authenticatedUser.getCurrentUser()).thenReturn(user);
+        when(taskRepository.findAllTasksUncompleted(user.getId())).thenReturn(tasks);
+        List<TaskDTO> result = taskService.findAllTaskUncompleted();
+        assertNotNull(result);
+        verify(authenticatedUser, times(1)).getCurrentUser();
+        verify(taskRepository, times(1)).findAllTasksUncompleted(user.getId());
+        assertEquals(tasks.size(), result.size());
+        assertEquals(tasks.get(0).getDescription(), result.get(0).description());
+    }
 }
