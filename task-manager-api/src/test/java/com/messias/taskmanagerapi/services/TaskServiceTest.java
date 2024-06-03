@@ -55,8 +55,9 @@ public class TaskServiceTest {
         tasks = new ArrayList<>();
         task1 = new Task("test1");
         task1.setInitialDate(LocalDate.of(2021, 3, 28));
+        task1.setStatus(false);
         task2 = new Task("test2");
-
+        task2.setStatus(false);
         tasks.add(task1);
         tasks.add(task2);
         user.setTaskList(tasks);
@@ -257,6 +258,7 @@ public class TaskServiceTest {
     @Test
     @DisplayName("When find all returns a list of task DTO with tasks uncompleted")
     void findAllTaskUncompleted() {
+        boolean statusRequired = false;
         when(authenticatedUser.getCurrentUser()).thenReturn(user);
         when(taskRepository.findAllTasksUncompleted(user.getId())).thenReturn(tasks);
         List<TaskDTO> result = taskService.findAllTaskUncompleted();
@@ -264,6 +266,7 @@ public class TaskServiceTest {
         verify(authenticatedUser, times(1)).getCurrentUser();
         verify(taskRepository, times(1)).findAllTasksUncompleted(user.getId());
         assertEquals(tasks.size(), result.size());
-        assertEquals(tasks.get(0).getDescription(), result.get(0).description());
+        assertFalse(result.get(0).status());
+        assertFalse(result.get(1).status());
     }
 }
