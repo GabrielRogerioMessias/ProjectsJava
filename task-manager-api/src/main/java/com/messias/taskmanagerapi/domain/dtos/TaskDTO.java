@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.messias.taskmanagerapi.domain.Category;
-import com.messias.taskmanagerapi.domain.User;
 
 public record TaskDTO(
         Integer idTask,
