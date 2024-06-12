@@ -69,6 +69,9 @@ public class CategoryService {
     public void updateData(Category oldCategory, Category updateCategory) {
         oldCategory.setDescription(updateCategory.getDescription());
     }
+    public List<Category> listAllTest() {
+        return categoryRepository.findAll();
+    }
 
 
 }

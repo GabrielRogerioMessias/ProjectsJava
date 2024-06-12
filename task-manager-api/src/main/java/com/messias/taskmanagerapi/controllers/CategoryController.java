@@ -56,6 +56,12 @@ public class CategoryController {
         return ResponseEntity.ok().body(categoryResult);
     }
 
+    @GetMapping("getAllTest")
+    public ResponseEntity<List<Category>> listAllTest() {
+        List<Category> result = categoryService.listAllTest();
+        return ResponseEntity.ok().body(result);
+    }
+
     @GetMapping
     @Operation(summary = "Finds all Categories",
             description = "Finds all categories belong to the authenticated user",

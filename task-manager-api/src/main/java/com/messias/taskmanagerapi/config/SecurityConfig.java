@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 .requestMatchers("/users", "/users/**").permitAll()
                                 .requestMatchers("/auth/**", "/auth").permitAll()
                                 .requestMatchers("/tasks/getAllTest").permitAll()
+                                .requestMatchers("/categories/getAllTest").permitAll()
                                 // Exigir autenticação para todas as outras requisições
                                 .anyRequest().authenticated()
                 )
