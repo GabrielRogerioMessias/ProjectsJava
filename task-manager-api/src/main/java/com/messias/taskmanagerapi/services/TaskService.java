@@ -121,7 +121,7 @@ public class TaskService {
         Task oldTask = taskRepository.findByIdWithCorrectUser(user.getId(), idOldTask).orElseThrow(() -> new ResourceNotFoundException(Task.class, idOldTask));
         if (updateTask.getCategory() != null) {
             if (updateTask.getCategory().getId() != null) {
-                Category updateCategory = categoryRepository.findCategoryByCurrentUserId(idOldTask, user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, idOldTask));
+                Category updateCategory = categoryRepository.findCategoryByCurrentUserId(updateTask.getCategory().getId(), user.getUsername()).orElseThrow(() -> new ResourceNotFoundException(Category.class, updateTask.getCategory().getId()));
                 oldTask.setCategory(updateCategory);
                 updateCategory.getTasksList().add(oldTask);
                 categoryRepository.save(updateCategory);
