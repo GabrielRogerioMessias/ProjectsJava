@@ -112,8 +112,8 @@ public class TaskService {
 
     private void updateData(Task oldTask, Task updateTask) {
         oldTask.setDescription(updateTask.getDescription());
-        oldTask.setInitialDate(oldTask.getInitialDate());
-        oldTask.setExpectFinalDate(oldTask.getExpectFinalDate());
+        oldTask.setInitialDate(updateTask.getInitialDate());
+        oldTask.setExpectFinalDate(updateTask.getExpectFinalDate());
     }
 
     public TaskDTO updateTask(Integer idOldTask, Task updateTask) {
