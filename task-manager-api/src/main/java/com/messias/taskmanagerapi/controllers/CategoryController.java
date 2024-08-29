@@ -21,7 +21,6 @@ import java.util.UUID;
 @Tag(name = "Category", description = "Endpoints for Manager Categories")
 public class CategoryController {
     private final CategoryService categoryService;
-
     public CategoryController(CategoryService categoryService) {
         this.categoryService = categoryService;
     }
