@@ -17,6 +17,10 @@ public class Product {
     @NotBlank(message = "Description may not blank")
     private String description;
 
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public Product(String description) {
     }
 }
