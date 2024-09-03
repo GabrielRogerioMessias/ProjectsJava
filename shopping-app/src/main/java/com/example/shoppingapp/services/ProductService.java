@@ -7,7 +7,6 @@ import jakarta.validation.ConstraintViolation;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionSystemException;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
 import java.util.List;
