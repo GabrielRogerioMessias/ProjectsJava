@@ -5,11 +5,11 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
-@Table(name = "tb_products")
+@Table(name = "tb_item")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Product {
+public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -21,6 +21,6 @@ public class Product {
     @JoinColumn(name = "category_id")
     private Category category;
 
-    public Product(String description) {
+    public Item(String description) {
     }
 }

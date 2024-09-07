@@ -1,7 +1,7 @@
 package com.example.shoppingapp.services;
 
-import com.example.shoppingapp.domain.Product;
-import com.example.shoppingapp.repositories.ProductRepository;
+import com.example.shoppingapp.domain.Item;
+import com.example.shoppingapp.repositories.ItemRepository;
 import com.example.shoppingapp.services.exceptions.NullEntityFieldException;
 import jakarta.validation.ConstraintViolation;
 import org.springframework.stereotype.Service;
@@ -13,31 +13,31 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class ProductService {
+public class ItemService {
 
-    private final ProductRepository productRepository;
+    private final ItemRepository itemRepository;
     private final Validator validator;
 
-    public ProductService(ProductRepository productRepository, Validator validator) {
-        this.productRepository = productRepository;
+    public ItemService(ItemRepository itemRepository, Validator validator) {
+        this.itemRepository = itemRepository;
         this.validator = validator;
     }
 
-    public List<Product> getAllProducts() {
-        return this.productRepository.findAll();
+    public List<Item> getAllItems() {
+        return this.itemRepository.findAll();
     }
 
-    private List<String> validateProduct(Product product) {
-        Set<ConstraintViolation<Product>> violations = validator.validate(product);
+    private List<String> validateItems(Item item) {
+        Set<ConstraintViolation<Item>> violations = validator.validate(item);
         return violations.stream().map((v) -> v.getPropertyPath().toString()).toList();
     }
 
-    public Product insertProduct(Product product) {
+    public Item insertItem(Item item) {
         try {
-            return this.productRepository.save(product);
+            return this.itemRepository.save(item);
         } catch (TransactionSystemException exception) {
             List<String> errors;
-            errors = this.validateProduct(product);
+            errors = this.validateItems(item);
             throw new NullEntityFieldException(errors);
         }
 

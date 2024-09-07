@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -19,5 +18,5 @@ public class Category {
     private String description;
 
     @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    private List<Item> items;
 }
