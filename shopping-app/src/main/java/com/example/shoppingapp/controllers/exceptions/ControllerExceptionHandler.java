@@ -11,6 +11,7 @@ import java.time.Instant;
 
 @ControllerAdvice
 public class ControllerExceptionHandler {
+
     @ExceptionHandler(NullEntityFieldException.class)
     public ResponseEntity<StandartError> productFieldsNull(NullEntityFieldException e, HttpServletRequest request) {
         String error = "Category Fields Null";
